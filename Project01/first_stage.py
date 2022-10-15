@@ -8,5 +8,5 @@ class first_stage:
         self.image = self.image.clip_image(804,0,677,233)
 
     def draw(self):
-        self.image.draw(960,540,1920,1080)
+        self.image.draw(640,360,1280,720)
 

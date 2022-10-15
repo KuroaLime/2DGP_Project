@@ -41,7 +41,7 @@ def draw():
 
     clear_canvas()
     if logo_image_count <= len(logo_image)-1:
-        logo_image[logo_image_count].draw(960,540)
+        logo_image[logo_image_count].draw(640,360)
     update_canvas()
     pass
 

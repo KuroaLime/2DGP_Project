@@ -30,7 +30,7 @@ def handle_events():
 
             elif event.key == SDLK_j:
                 #공격 상태
-                if Player.frame_turn<=0:
+                if Player.frame_turn<=0 and Player.jump_turn == False:
                     if Player.normal_attack_stack == 0:
                         Player.frame=0
                         Player.frame_turn = 3
@@ -46,7 +46,7 @@ def handle_events():
                     Player.dir_ud=0
                     Player.run_state=0
 
-            elif Player.frame_turn <=2:
+            elif Player.frame_turn <=2 or Player.frame_turn >5:
                 if event.key == SDLK_a: # 왼쪽 이동
                     Player.dir_lr = -1
                     if Player.dir_last!=Player.dir_lr:
@@ -77,7 +77,8 @@ def handle_events():
                             Player.run_state = 1
                         elif Player.dir_last == -1:
                             Player.run_state = -1
-
+                elif event.key == SDLK_k: #jump key
+                    Player.jump_turn=True
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_a or event.key == SDLK_d:
                 Player.dir_lr = 0
@@ -95,14 +96,15 @@ def handle_events():
 
 
 def frame_turn_changer():
-    if Player.run_state !=0:
-        if Player.frame_turn != 2:
-            Player.frame_turn == 2
-    elif Player.dir_lr !=0 or Player.dir_ud !=0:
-        if Player.frame_turn != 1:
-            Player.frame_turn == 1
-    elif Player.dir_lr==0 and Player.dir_ud==0:
-        Player.frame_turn == 0
+    if Player.jump_turn == False:
+        if Player.run_state !=0:
+            if Player.frame_turn != 2:
+                Player.frame_turn == 2
+        elif Player.dir_lr !=0 or Player.dir_ud !=0:
+            if Player.frame_turn != 1:
+                Player.frame_turn == 1
+        elif Player.dir_lr==0 and Player.dir_ud==0:
+            Player.frame_turn == 0
 
 
 Player=None
