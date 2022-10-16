@@ -1,6 +1,5 @@
 from pico2d import *
-
-
+from canvas_size import *
 
 class first_stage:
     def __init__(self):
@@ -8,5 +7,5 @@ class first_stage:
         self.image = self.image.clip_image(804,0,677,233)
 
     def draw(self):
-        self.image.draw(640,360,1280,720)
+        self.image.draw(WID//2+400,HEI//2,2970,990)
 

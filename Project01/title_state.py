@@ -1,4 +1,5 @@
 from pico2d import *
+from canvas_size import *
 
 import game_framework
 import play_state
@@ -53,7 +54,7 @@ def handle_events():
 
 def draw():
     clear_canvas()
-    image_background.draw(960,540)
+    image_background.draw(WID//2,HEI//2)
     image_component.clip_draw(110, 0, 649, 380, component_x[0], component_y[0]) #name logo
     image_component.clip_draw(830, 70, 193, 69, component_x[1], component_y[1]) # start 버튼
     image_component.clip_draw(830, 0, 193, 69, component_x[2], component_y[2])  # end 버튼

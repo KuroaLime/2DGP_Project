@@ -2,6 +2,7 @@ import game_framework
 from pico2d import *
 
 import title_state
+from canvas_size import *
 
 running=True
 logo_image=None
@@ -41,7 +42,7 @@ def draw():
 
     clear_canvas()
     if logo_image_count <= len(logo_image)-1:
-        logo_image[logo_image_count].draw(640,360)
+        logo_image[logo_image_count].draw(WID//2, HEI//2)
     update_canvas()
     pass
 

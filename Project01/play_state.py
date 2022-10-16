@@ -1,13 +1,15 @@
 from pico2d import *
 import game_framework
 
+import Screen_default_deco
+
 #스테이트 임포트
 import title_state
 import first_stage
 
 #적 임포트
 import enermy_class
-import Plable_Kyoko
+import Playable_Kyoko
 # class Grass:
 #     def __init__(self):
 #         self.image = load_image('grass.png')
@@ -113,24 +115,29 @@ background=None
 
 running=None
 
+Default_deco_bar = None
 
 def enter():
     global Player,Enermy
     global background, running
+    global Default_deco_bar
 
     hide_cursor()
 
-    Player = Plable_Kyoko.kyoko()
+    Player = Playable_Kyoko.kyoko()
     Enermy = [enermy_class.cheerleader()]
 
     background=first_stage.first_stage()
+
+    Default_deco_bar= Screen_default_deco.black_bar()
 
     running = True
 
 def exit():
     global Player,Enermy
-    global background
-    del Player,background
+    global background, Default_deco_bar
+
+    del Player,background,Default_deco_bar
     for i in range(0, len(Enermy)):
         del Enermy[i]
 
@@ -148,8 +155,14 @@ def draw():
 
 
 def draw_world():
+    #스테이지 배경
     background.draw()
+
+    #움직임 가능한 객체
     Player.draw()
+
+    #기본 데코
+    Default_deco_bar.draw()
 def draw_enermy():
     for i in range(0,len(Enermy)):
         Enermy[i].draw()
