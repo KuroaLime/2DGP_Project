@@ -28,6 +28,7 @@ class kyoko:
         self.run_state=0 #Run 상태
         self.normal_attack_stack=0 #일반공격 콤보 스택 0:스냅 1:옆차기 2: 돌려차기
         self.normal_attack_time=0
+        self.normal_attack_frame_state=0
         self.image = load_image('Player_kyoko.png')
         self.image_L = load_image('Player_kyoko_L.png')
         self.j_keyup=0
@@ -42,7 +43,9 @@ class kyoko:
                 self.x += self.dir_lr * 10
                 self.y += self.dir_ud * 10
 
-        elif self.frame_turn >2 and self.frame_turn <6 :   #노멀 어택 대기 시간
+        elif self.frame_turn <6 :   #노멀 어택 대기 시간
+            if self.frame>=self.last_frame[self.frame_turn]-1 and self.normal_attack_frame_state == 1:
+                self.normal_attack_frame_state = 0
             self.normal_attack_time += 0.1
             if self.normal_attack_time >=1.0:
                 self.normal_attack_stack=0

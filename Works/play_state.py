@@ -32,7 +32,7 @@ def handle_events():
 
             elif event.key == SDLK_j:
                 #공격 상태
-                if Player.frame_turn<=0 and Player.jump_turn == False:
+                if Player.frame_turn<=0 and Player.jump_turn == False and Player.normal_attack_frame_state == 0:
                     if Player.normal_attack_stack == 0:
                         Player.frame=0
                         Player.frame_turn = 3
@@ -42,6 +42,7 @@ def handle_events():
                     elif Player.normal_attack_stack ==2:
                         Player.frame = 0
                         Player.frame_turn =5
+                    Player.normal_attack_frame_state = 1
                     Player.normal_attack_time=0
                     #초기화
                     Player.dir_lr =0
