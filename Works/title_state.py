@@ -8,16 +8,28 @@ import logo_state
 image_background = None
 image_component=None
 
-component_x=[485,485,485]
-component_y=[750,400,335]
+component_x=None
+component_y=None
 
-my_button_x=350
-my_button_y=[390,320] #start = 390    end= 320
+my_button_x=None
+my_button_y=None
 
-my_button_dir=0
+my_button_dir=None
 def enter():
     global image_background
     global image_component
+    global component_x, component_y
+    global my_button_x, my_button_y, my_button_dir
+
+    hide_cursor()
+
+    component_x = [485, 485, 485]
+    component_y = [750, 400, 335]
+
+    my_button_x = 350
+    my_button_y = [390, 320]  # start = 390    end= 320
+
+    my_button_dir = 0
 
     image_background=load_image('Resource/title/title.png')
     image_component=load_image('Resource/title/title_component.png')

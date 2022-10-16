@@ -12,7 +12,8 @@ logo_image_count=0
 def enter():
     global logo_image
     logo_image=[load_image('Resource/logo/first_logo.png'),load_image('Resource/logo/second_logo.png'), load_image('Resource/logo/third_logo.png')]
-
+    hide_cursor()
+    
     pass
 
 def exit():
