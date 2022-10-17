@@ -54,22 +54,22 @@ def handle_events():
                     Player.dir_lr = -1
                     if Player.dir_last!=Player.dir_lr:
                         Player.dir_last = Player.dir_lr
-                    frame_turn_changer()
+                    Player.frame_turn_changer()
                 elif event.key == SDLK_d: # 오른쪽 이동
                     Player.dir_lr = 1
                     if Player.dir_last!=Player.dir_lr:
                         Player.dir_last = Player.dir_lr
-                    frame_turn_changer
+                    Player.frame_turn_changer
                 elif event.key == SDLK_w: # 위쪽 이동
                     Player.dir_ud = 1
                     if Player.dir_last!=Player.dir_lr:
                         Player.dir_last = Player.dir_lr
-                    frame_turn_changer
+                    Player.frame_turn_changer
                 elif event.key == SDLK_s: # 아래쪽 이동
                     Player.dir_ud = -1
                     if Player.dir_last!=Player.dir_lr:
                         Player.dir_last = Player.dir_lr
-                    frame_turn_changer
+                    Player.frame_turn_changer
                 elif event.key == SDLK_TAB:
                     if Player.dir_lr == 1:
                         Player.run_state = 1
@@ -85,29 +85,16 @@ def handle_events():
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_a or event.key == SDLK_d:
                 Player.dir_lr = 0
-                frame_turn_changer()
+                Player.frame_turn_changer()
                 Player.frame=0
             elif event.key == SDLK_w or event.key == SDLK_s:
                 Player.dir_ud = 0
                 Player.frame = 0
-                frame_turn_changer()
+                Player.frame_turn_changer()
             elif event.key == SDLK_TAB:
                 Player.run_state=0
             elif event.key == SDLK_j:
                 Player.j_keyup=1
-
-
-
-def frame_turn_changer():
-    if Player.jump_turn == False:
-        if Player.run_state !=0:
-            if Player.frame_turn != 2:
-                Player.frame_turn == 2
-        elif Player.dir_lr !=0 or Player.dir_ud !=0:
-            if Player.frame_turn != 1:
-                Player.frame_turn == 1
-        elif Player.dir_lr==0 and Player.dir_ud==0:
-            Player.frame_turn == 0
 
 
 Player=None
@@ -126,7 +113,7 @@ def enter():
     hide_cursor()
 
     Player = Playable_Kyoko.kyoko()
-    Enermy = [enermy_class.cheerleader()]
+    Enermy = [enermy_class.cheerleader(),enermy_class.cheerleader()]
 
     background=first_stage.first_stage()
 
@@ -139,19 +126,21 @@ def exit():
     global background, Default_deco_bar
 
     del Player,background,Default_deco_bar
-    for i in range(0, len(Enermy)):
-        del Enermy[i]
+    for enermys in Enermy:
+        del enermys
 
 
 def update():
     Player.update()
+    for enermys in Enermy:
+        enermys.update()
     # for i in range(0, len(Enermy)):
     #     Enermy[i].update()
 
+    delay(0.01)
 def draw():
     clear_canvas()
     draw_world()
-    # draw_enermy()
     update_canvas()
 
 
@@ -161,12 +150,13 @@ def draw_world():
 
     #움직임 가능한 객체
     Player.draw()
+    draw_enermy()
 
     #기본 데코
     Default_deco_bar.draw()
 def draw_enermy():
-    for i in range(0,len(Enermy)):
-        Enermy[i].draw()
+    for enermys in Enermy:
+        enermys.draw()
 
 
 def pause():

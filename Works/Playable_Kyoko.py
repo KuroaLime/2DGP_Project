@@ -57,7 +57,6 @@ class kyoko:
             if self.jump_last_v-1 == self.jump_progress_v:
                 self.jump_turn = False
                 self.jump_progress_v=15
-        delay(0.05)
     def run_dir_R(self):
         if self.run_state > 0:
             self.image.clip_draw(self.frame * 59, 134, 58, 70, self.x, self.y)
@@ -89,6 +88,17 @@ class kyoko:
                 self.normal_attack_stack = self.normal_attack_stack + 1
                 if self.normal_attack_stack >= 3:
                     self.normal_attack_stack = 0
+
+    def frame_turn_changer(self):
+        if self.jump_turn == False:
+            if self.run_state != 0:
+                if self.frame_turn != 2:
+                    self.frame_turn == 2
+            elif self.dir_lr != 0 or self.dir_ud != 0:
+                if self.frame_turn != 1:
+                    self.frame_turn == 1
+            elif self.dir_lr == 0 and self.dir_ud == 0:
+                self.frame_turn == 0
     def draw(self):
         if self.jump_turn == True:
             if self.jump_last_v>=self.jump_progress_v:

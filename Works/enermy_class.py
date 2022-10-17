@@ -21,15 +21,23 @@ class cheerleader:
 
     def arrival_point_changer(self):
         if self.ax!=play_state.Player.x or self.ay!=play_state.Player.y:
-            if self.t >= 1.0:
-                self.t = 0
+            # if self.t >= 1.0:
+            #     self.t = 0
             self.sx, self.sy = self.x, self.y
             self.ax, self.ay = play_state.Player.x, play_state.Player.y
     def update(self):
         self.frame = (self.frame + 1) % self.last_frame[self.frame_turn]
-        self.t += 0.0005
-        self.x = (1-self.t)*self.sx+self.t*self.ax
-        self.y = (1-self.t)*self.sy+self.t*self.ay
+        #self.t += 0.0005
+        if self.x != self.ax:
+            if self.x > self.ax:
+                self.x -= 5
+            elif self.x < self.ax:
+                self.x +=5
+        if self.y != self.ay:
+            if self.y > self.ay:
+                self.y -= 5
+            elif self.y < self.ay:
+                self.y += 5
         self.arrival_point_changer()
 
     def frame_turn_changer(self):
