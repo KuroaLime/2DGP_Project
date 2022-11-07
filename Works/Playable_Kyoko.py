@@ -2,18 +2,31 @@ from pico2d import *
 import game_framework
 import game_world
 
-RD,RU,LD,LU,UD,UU,DD,DU, TIMER,JD,KD=range(11)
-event_name=['RD','RU','LD','LU','TIMER','JD','KD']
+PIXEL_PER_METER = (10.0 / 0.3)
+RUN_SPEED_KMPH = 20.0
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION_IDLE = 12
+FRAMES_PER_ACTION_RUN = 12
+
+RD,RU,LD,LU,UD,UU,DD,DU,DASHD,DASHU, TIMER,JD,KD=range(13)
+event_name=['RD','RU','LD','LU','DASHD','DASHU','TIMER','JD','KD']
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_d): RD,
     (SDL_KEYDOWN, SDLK_a): LD,
     (SDL_KEYDOWN, SDLK_w): UD,
     (SDL_KEYDOWN, SDLK_s): DD,
+    (SDL_KEYDOWN, SDLK_TAB): DASHD,
     (SDL_KEYUP, SDLK_d): RU,
     (SDL_KEYUP, SDLK_a): LU,
     (SDL_KEYUP, SDLK_w): UU,
-    (SDL_KEYUP, SDLK_s): DU
+    (SDL_KEYUP, SDLK_s): DU,
+    (SDL_KEYUP, SDLK_TAB): DASHU
 }
 class IDLE:
     @staticmethod
@@ -29,7 +42,7 @@ class IDLE:
 
     @staticmethod
     def do(self):
-        self.frame = (self.frame + 1) % 12
+        self.frame =  (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
         self.timer -= 1
         if self.timer == 0:
             self.add_event(TIMER)
@@ -37,9 +50,9 @@ class IDLE:
     @staticmethod
     def draw(self):
         if self.face_dir == 1:
-            self.image.clip_composite_draw(self.frame * 39, 415, 39, 69, 0, '', self.x, self.y,140,200)
+            self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, '', self.x, self.y,140,200)
         else:
-            self.image.clip_composite_draw(self.frame * 39, 415, 39, 69, 0, 'h', self.x, self.y,140,200)
+            self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', self.x, self.y,140,200)
 
 
 
@@ -63,15 +76,15 @@ class RUN_lr:
         self.face_dir = self.dir_lr
     @staticmethod
     def do(self):
-        self.frame = (self.frame + 1) % 12
-        self.x += self.dir_lr*1
+        self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
+        self.x += self.dir_lrd * RUN_SPEED_PPS * game_framework.frame_time
         self.x = clamp(0, self.x, 1920)
     @staticmethod
     def draw(self):
         if self.dir_lr == 1:
-            self.image.clip_composite_draw(self.frame * 59, 134, 58, 70,0,'', self.x, self.y,140,200)
+            self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', self.x, self.y,140,200)
         else:
-            self.image.clip_composite_draw(self.frame * 59, 134, 58, 70,0,'h', self.x, self.y,140,200)
+            self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', self.x, self.y,140,200)
 class RUN_ud:
     @staticmethod
     def enter(self, event):
@@ -91,15 +104,15 @@ class RUN_ud:
         print('EXIT RUN_ud')
     @staticmethod
     def do(self):
-        self.frame = (self.frame + 1) % 12
-        self.y += self.dir_ud * 1
+        self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
+        self.y += self.dir_ud  * RUN_SPEED_PPS * game_framework.frame_time
         self.y = clamp(0, self.y, 1080)
     @staticmethod
     def draw(self):
         if self.face_dir == 1:
-            self.image.clip_composite_draw(self.frame * 59, 134, 58, 70,0,'', self.x, self.y,140,200)
+            self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', self.x, self.y,140,200)
         else:
-            self.image.clip_composite_draw(self.frame * 59, 134, 58, 70,0,'h', self.x, self.y,140,200)
+            self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', self.x, self.y,140,200)
 class SLEEP:
     @staticmethod
     def enter(self, event):
@@ -112,20 +125,50 @@ class SLEEP:
 
     @staticmethod
     def do(self):
-        self.frame = (self.frame + 1) % 12
+        self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
 
     @staticmethod
     def draw(self):
         if self.face_dir == 1:
-            self.image.clip_composite_draw(self.frame * 39, 415, 39, 69, 0, '', self.x, self.y, 140, 200)
+            self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, '', self.x, self.y, 140, 200)
         else:
-            self.image.clip_composite_draw(self.frame * 39, 415, 39, 69, 0, 'h', self.x, self.y, 140, 200)
+            self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', self.x, self.y, 140, 200)
 
+class DASH:
+    @staticmethod
+    def enter(self, event):
+        print('ENTER RUN_ud')
+        if event == UD:
+            self.dir_ud += 1
+        elif event == DD:
+            self.dir_ud -= 1
+        elif event == UU:
+            self.dir_ud -= 1
+        elif event == DU:
+            self.dir_ud += 1
+
+    @staticmethod
+    def exit(self, event):
+        print('EXIT RUN_ud')
+
+    @staticmethod
+    def do(self):
+        self.frame = (self.frame + 1) % 12
+        self.y += self.dir_ud * 1
+        self.y = clamp(0, self.y, 1080)
+
+    @staticmethod
+    def draw(self):
+        if self.face_dir == 1:
+            self.image.clip_composite_draw(self.frame * 59, 134, 58, 70, 0, '', self.x, self.y, 140, 200)
+        else:
+            self.image.clip_composite_draw(self.frame * 59, 134, 58, 70, 0, 'h', self.x, self.y, 140, 200)
 
 next_state = {
-    IDLE:  {RU: RUN_lr,  LU: RUN_lr, UU:RUN_ud, DU:RUN_ud, RD: RUN_lr,  LD: RUN_lr,UD: RUN_ud, DD:RUN_ud, TIMER: SLEEP},
-    RUN_lr:   {RD: IDLE,LD: IDLE, UD:RUN_ud, DD: RUN_ud,RU: IDLE, LU: IDLE, UU:RUN_lr, DU:RUN_lr},
-    RUN_ud:   {RD: RUN_lr,LD: RUN_lr, UD:IDLE, DD: IDLE,RU: RUN_ud, LU: RUN_ud, UU:IDLE, DU:IDLE},
+    DASH: {RU: IDLE,  LU: IDLE, UU:DASH, DU:IDLE, RD: DASH,  LD: DASH,UD: DASH, DD:DASH},
+    IDLE:  {RU: RUN_lr,  LU: RUN_lr, UU:RUN_ud, DU:RUN_ud, RD: RUN_lr,  LD: RUN_lr,UD: RUN_ud, DD:RUN_ud,DASHD:IDLE, DASHU:IDLE, TIMER: SLEEP},
+    RUN_lr:   {RD: IDLE,LD: IDLE, UD:RUN_ud, DD: RUN_ud,RU: IDLE, LU: IDLE, UU:RUN_lr, DU:RUN_lr,DASHD:DASH, DASHU:RUN_lr},
+    RUN_ud:   {RD: RUN_lr,LD: RUN_lr, UD:IDLE, DD: IDLE,RU: RUN_ud, LU: RUN_ud, UU:IDLE,DASHD:DASH, DU:IDLE, DASHU:RUN_ud},
     SLEEP: {RU: RUN_lr,  LU: RUN_lr, UU:RUN_ud, DU:RUN_ud, RD: RUN_lr,  LD: RUN_lr,UD: RUN_ud, DD:RUN_ud, TIMER: SLEEP}
 }
 class Kyoko:
