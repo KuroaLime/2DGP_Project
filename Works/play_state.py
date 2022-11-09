@@ -5,7 +5,7 @@ from Screen_default_deco import Black_bar
 
 #스테이트 임포트
 import title_state
-from first_stage import First_stage
+from stage import Stage
 
 #적 임포트
 from cheerleader import Cheerleader
@@ -123,7 +123,7 @@ def enter():
 
     Player = Kyoko()
     Enermy = Cheerleader()
-    background=First_stage()
+    background=Stage(0)
     Default_deco_bar= Black_bar()
 
     game_world.add_object(Player, 3)

@@ -1,6 +1,7 @@
 from pico2d import *
 import game_framework
 import game_world
+import canvas_size
 
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 20.0
@@ -77,8 +78,8 @@ class RUN_lr:
     @staticmethod
     def do(self):
         self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
-        self.x += self.dir_lrd * RUN_SPEED_PPS * game_framework.frame_time
-        self.x = clamp(0, self.x, 1920)
+        self.x += self.dir_lr * RUN_SPEED_PPS * game_framework.frame_time
+        self.x = clamp(0, self.x, canvas_size.WID)
     @staticmethod
     def draw(self):
         if self.dir_lr == 1:
@@ -106,7 +107,7 @@ class RUN_ud:
     def do(self):
         self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
         self.y += self.dir_ud  * RUN_SPEED_PPS * game_framework.frame_time
-        self.y = clamp(0, self.y, 1080)
+        self.y = clamp(0, self.y, canvas_size.HEI)
     @staticmethod
     def draw(self):
         if self.face_dir == 1:
