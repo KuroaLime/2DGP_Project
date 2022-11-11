@@ -323,6 +323,8 @@ class Kyoko:
     #             self.frame_turn == 0
     def draw(self):
         self.cur_state.draw(self)
+        draw_rectangle(*self.get_bb())
+        draw_rectangle(*self.get_TT())
         debug_print('PPPP')
         debug_print(f'Face Dir: {self.face_dir}, Dir: {self.dir_lr}')
         # if self.jump_turn == True:
@@ -391,11 +393,10 @@ class Kyoko:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
 
-    def get_bb(self):
-        if self.cur_state != SLEEP:
-            return self.x - 15, self.y - 40, self.x + 15, self.y + 43
-        else:
-            return self.x - 40, self.y - 15, self.x + 43, self.y + 15
+    def get_bb(self):   #적, 자판기등의 오브젝트와의 충돌범위
+        return self.x - 45, self.y - 95, self.x + 45, self.y + 85
+    def get_TT(self):   #스테이지와의 충돌
+        return self.x - 45, self.y - 95, self.x + 45, self.y -80
 
     def handle_collision(self, other, group):
         pass

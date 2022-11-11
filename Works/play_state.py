@@ -141,14 +141,15 @@ def update():
     for game_object in game_world.all_objects():
         game_object.update()
     for a, b, group in game_world.all_collision_pairs():
+
         if group == 'Player:First_stage':
             if stage_collide(a, b):
-                print('COLLISON : ', )
+                print('COLLISON : ', group)
                 a.handle_collision(b, group)
                 b.handle_collision(a, group)
         else:
             if collide(a, b):
-                print('COLLISON : ', )
+                print('COLLISON : ', group)
                 a.handle_collision(b, group)
                 b.handle_collision(a, group)
 def draw():
@@ -173,15 +174,15 @@ def collide(a,b):
     return True
 
 def stage_collide(a,b):
-    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_a, bottom_a, right_a, top_a = a.get_TT()
     left_b, bottom_b, right_b, top_b = b.get_bb()
 
-    if left_a < right_b: return False
-    if right_a > left_b: return False
-    if top_a > bottom_b: return False
-    if bottom_a < top_b: return False
+    if left_a < left_b: return True
+    if right_a > right_b: return True
+    if top_a > top_b: return True
+    if bottom_a < bottom_b: return True
 
-    return True
+    return False
 def pause():
     pass
 

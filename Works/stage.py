@@ -39,11 +39,19 @@ class First_Stage:
 
     def draw(self):
         self.image.draw(self.WID,self.HEI,2970,990)
+        draw_rectangle(*self.get_bb())
     def get_bb(self):
-        return self.WID - 100, self.HEI - 40, self.WID + 100, self.HEI + 43
+        return self.WID - 900, self.HEI - 420, self.WID + 900, self.HEI-90
 
     def handle_collision(self, other, group):
-        if other.x < self.WID - 100: return False
-        if other.x > left_b: return False
-        if top_a > bottom_b: return False
-        if bottom_a < top_b: return False
+        left_a, bottom_a, right_a, top_a = other.get_TT()
+        left_b, bottom_b, right_b, top_b = self.get_bb()
+
+        if left_a < left_b:
+            other.x += 1
+        if right_a > right_b:
+            other.x += -1
+        if top_a > top_b:
+            other.y += -1
+        if bottom_a < bottom_b:
+            other.y += 1
