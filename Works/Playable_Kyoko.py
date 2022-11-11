@@ -43,7 +43,7 @@ class IDLE:
 
     @staticmethod
     def do(self):
-        self.frame =  (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
+        self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
         self.timer -= 1
         if self.timer == 0:
             self.add_event(TIMER)
@@ -61,8 +61,6 @@ class RUN_lr:
     @staticmethod
     def enter(self, event):
         print('ENTER RUN_lr')
-        if self.dir_ud:
-            self.dir_ud = 0
         if event == RD:
             self.dir_lr += 1
         elif event == LD:
@@ -71,6 +69,8 @@ class RUN_lr:
             self.dir_lr -= 1
         elif event == LU:
             self.dir_lr += 1
+        print('dir_lr값: ', self.dir_lr)
+
     @staticmethod
     def exit(self, event):
         print('EXIT RUN_lr')
@@ -90,8 +90,6 @@ class RUN_ud:
     @staticmethod
     def enter(self, event):
         print('ENTER RUN_ud')
-        if self.dir_lr:
-            self.dir_lr = 0
         if event == UD:
             self.dir_ud = 1
         elif event == DD:
@@ -100,6 +98,7 @@ class RUN_ud:
             self.dir_ud -= 1
         elif event == DU:
             self.dir_ud += 1
+        print('dir_ud값: ', self.dir_ud)
     @staticmethod
     def exit(self, event):
         print('EXIT RUN_ud')
@@ -114,6 +113,51 @@ class RUN_ud:
             self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', self.x, self.y,140,200)
         else:
             self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', self.x, self.y,140,200)
+
+class RUN_diag: #대각선 이동
+    @staticmethod
+    def enter(self, event):
+        print('ENTER RUN_diag')
+        if event == RD:
+            self.dir_lr += 1
+        elif event == LD:
+            self.dir_lr -= 1
+        elif event == RU:
+            self.dir_lr -= 1
+        elif event == LU:
+            self.dir_lr += 1
+        print('dir_lr값: ', self.dir_lr)
+        if event == UD:
+            self.dir_ud = 1
+        elif event == DD:
+            self.dir_ud = -1
+        elif event == UU:
+            self.dir_ud -= 1
+        elif event == DU:
+            self.dir_ud += 1
+        print('dir_ud값: ', self.dir_ud)
+    @staticmethod
+    def exit(self, event):
+        print('EXIT RUN_diag')
+        self.face_dir = self.dir_lr
+        if event == UU or event == DU:
+            self.dir_ud = 0
+        if event == RU or event ==LU:
+            self.dir_lr = 0
+    @staticmethod
+    def do(self):
+        self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
+        self.x += self.dir_lr * RUN_SPEED_PPS * game_framework.frame_time
+        self.y += self.dir_ud * RUN_SPEED_PPS * game_framework.frame_time
+        self.y = clamp(0, self.y, canvas_size.HEI)
+        self.x = clamp(0, self.x, canvas_size.WID)
+
+    @staticmethod
+    def draw(self):
+        if self.dir_lr == 1:
+            self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70, 0, '', self.x, self.y, 140, 200)
+        else:
+            self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70, 0, 'h', self.x, self.y, 140, 200)
 class SLEEP:
     @staticmethod
     def enter(self, event):
@@ -134,6 +178,7 @@ class SLEEP:
             self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, '', self.x, self.y, 140, 200)
         else:
             self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', self.x, self.y, 140, 200)
+
 
 class DASH:
     @staticmethod
@@ -166,12 +211,20 @@ class DASH:
             self.image.clip_composite_draw(self.frame * 59, 134, 58, 70, 0, 'h', self.x, self.y, 140, 200)
 
 next_state = {
-    DASH: {RU: IDLE,  LU: IDLE, UU:DASH, DU:IDLE, RD: DASH,  LD: DASH,UD: DASH, DD:DASH},
-    IDLE:  {RU: RUN_lr,  LU: RUN_lr, UU:RUN_ud, DU:RUN_ud, RD: RUN_lr,  LD: RUN_lr,UD: RUN_ud, DD:RUN_ud,DASHD:IDLE, DASHU:IDLE, TIMER: SLEEP},
-    RUN_lr:   {RD: IDLE,LD: IDLE, UD:RUN_ud, DD: RUN_ud,RU: IDLE, LU: IDLE, UU:RUN_lr, DU:RUN_lr,DASHD:DASH, DASHU:RUN_lr},
-    RUN_ud:   {RD: RUN_lr,LD: RUN_lr, UD:IDLE, DD: IDLE,RU: RUN_ud, LU: RUN_ud, UU:IDLE,DASHD:DASH, DU:IDLE, DASHU:RUN_ud},
-    SLEEP: {RU: RUN_lr,  LU: RUN_lr, UU:RUN_ud, DU:RUN_ud, RD: RUN_lr,  LD: RUN_lr,UD: RUN_ud, DD:RUN_ud, TIMER: SLEEP}
+    IDLE: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud, TIMER: SLEEP},
+    RUN_lr: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE, UU: RUN_diag, DU: RUN_diag, UD: RUN_diag, DD: RUN_diag},
+    RUN_ud: {RU: RUN_diag, LU: RUN_diag, RD: RUN_diag, LD: RUN_diag, UU: IDLE, DU: IDLE, UD: IDLE, DD: IDLE},
+    RUN_diag: {RU: RUN_ud, LU: RUN_ud, RD: RUN_ud, LD: RUN_ud, UU: RUN_lr, DU: RUN_lr, UD: RUN_lr, DD: RUN_lr},
+    SLEEP: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud, TIMER: SLEEP}
 }
+# next_state = {
+#     DASH: {RU: IDLE,  LU: IDLE, UU:DASH, DU:IDLE, RD: DASH,  LD: DASH,UD: DASH, DD:DASH},
+#     IDLE:  {RU: RUN_lr,  LU: RUN_lr, UU:RUN_ud, DU:RUN_ud, RD: RUN_lr,  LD: RUN_lr,UD: RUN_ud, DD:RUN_ud,DASHD:IDLE, DASHU:IDLE, TIMER: SLEEP},
+#     RUN_lr:   {RD: RUN_diag,LD: RUN_diag, UD:RUN_ud, DD: RUN_ud,RU: IDLE, LU: IDLE, UU:RUN_lr, DU:RUN_lr,DASHD:DASH, DASHU:RUN_lr},
+#     RUN_ud:   {RD: RUN_lr,LD: RUN_lr, UD:RUN_diag, DD: RUN_diag,RU: RUN_ud, LU: RUN_ud, UU:IDLE, DU:IDLE, DASHD:DASH, DASHU:RUN_ud},
+#     RUN_diag:   {RD: RUN_ud,LD: RUN_ud, UD:RUN_lr, DD: RUN_lr,RU: RUN_ud, LU: RUN_ud, UU:RUN_lr, DU:RUN_lr, DASHD:DASH, DASHU:RUN_ud},
+#     SLEEP: {RU: RUN_lr,  LU: RUN_lr, UU:RUN_ud, DU:RUN_ud, RD: RUN_lr,  LD: RUN_lr,UD: RUN_ud, DD:RUN_ud, TIMER: SLEEP}
+# }
 class Kyoko:
     image =None
     def __init__(self):
@@ -337,3 +390,12 @@ class Kyoko:
             print('event_type : ',event.type,', event_key : ',event.key)
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
+
+    def get_bb(self):
+        if self.cur_state != SLEEP:
+            return self.x - 15, self.y - 40, self.x + 15, self.y + 43
+        else:
+            return self.x - 40, self.y - 15, self.x + 43, self.y + 15
+
+    def handle_collision(self, other, group):
+        pass

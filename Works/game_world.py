@@ -1,5 +1,5 @@
 world=[[],[],[],[]]
-
+collision_group = dict()
 def add_object(o, depth):
     world[depth].append(o)
 
@@ -15,6 +15,7 @@ def remove_object(o,depth):
     for layer in world:
         if o in layer:
             layer.remove(o)
+            remove_collision_object(o)
             del o
             return
     raise ValueError('Trying destroy non existing object')
@@ -26,3 +27,32 @@ def clear():
         del o
     for layer in world:
         layer.clear()
+
+def add_collison_pairs(a,b,group):
+    if group not in collision_group:
+        print('add new group')
+        collision_group[group]=[[],[]]
+
+    if a:
+        if type(a)==list:
+            collision_group[group][0]+= a
+        else:
+            collision_group[group][0].append(a)
+
+    if b:
+        if type(b)==list:
+            collision_group[group][1]+= b
+        else:
+            collision_group[group][1].append(b)
+
+
+def all_collision_pairs():
+    for group,pairs_list in collision_group.items():
+        for a in pairs_list[0]:
+            for b in pairs_list[1]:
+                yield a,b,group
+
+def remove_collision_object(o):
+    for pairs in collision_group.values():
+        if o in pairs[0]: pairs[0].remove(o)
+        elif o in pairs[1]:pairs[1].remove(o)

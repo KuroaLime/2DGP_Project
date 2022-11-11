@@ -5,7 +5,7 @@ from Screen_default_deco import Black_bar
 
 #스테이트 임포트
 import title_state
-from stage import Stage
+from stage import *
 
 #적 임포트
 from cheerleader import Cheerleader
@@ -123,14 +123,15 @@ def enter():
 
     Player = Kyoko()
     Enermy = Cheerleader()
-    background=Stage(0)
+    background=First_Stage(0)
     Default_deco_bar= Black_bar()
 
     game_world.add_object(Player, 3)
     game_world.add_object(Enermy, 3)
     game_world.add_object(background, 0)
     game_world.add_object(Default_deco_bar, 2)
-    running = True
+    # running = True
+    game_world.add_collison_pairs(Player, background, 'Player:First_stage')
 
 def exit():
     game_world.clear()
@@ -139,6 +140,17 @@ def exit():
 def update():
     for game_object in game_world.all_objects():
         game_object.update()
+    for a, b, group in game_world.all_collision_pairs():
+        if group == 'Player:First_stage':
+            if stage_collide(a, b):
+                print('COLLISON : ', )
+                a.handle_collision(b, group)
+                b.handle_collision(a, group)
+        else:
+            if collide(a, b):
+                print('COLLISON : ', )
+                a.handle_collision(b, group)
+                b.handle_collision(a, group)
 def draw():
     clear_canvas()
     draw_world()
@@ -149,6 +161,27 @@ def draw_world():
     for game_object in game_world.all_objects():
         game_object.draw()
 
+def collide(a,b):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a > right_b : return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+
+    return True
+
+def stage_collide(a,b):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a < right_b: return False
+    if right_a > left_b: return False
+    if top_a > bottom_b: return False
+    if bottom_a < top_b: return False
+
+    return True
 def pause():
     pass
 

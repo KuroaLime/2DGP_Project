@@ -5,7 +5,7 @@ import canvas_size
 import play_state
 import Playable_Kyoko
 Stage_image = {0: (804,0,677,233)}
-class Stage:
+class First_Stage:
     def __init__(self,Stage_location):
         self.image = load_image('Resource/stage/stage01/first_stage_sheet.png')
         self.image = self.image.clip_image(Stage_image[Stage_location][0],Stage_image[Stage_location][1],Stage_image[Stage_location][2],Stage_image[Stage_location][3])
@@ -39,4 +39,11 @@ class Stage:
 
     def draw(self):
         self.image.draw(self.WID,self.HEI,2970,990)
+    def get_bb(self):
+        return self.WID - 100, self.HEI - 40, self.WID + 100, self.HEI + 43
 
+    def handle_collision(self, other, group):
+        if other.x < self.WID - 100: return False
+        if other.x > left_b: return False
+        if top_a > bottom_b: return False
+        if bottom_a < top_b: return False

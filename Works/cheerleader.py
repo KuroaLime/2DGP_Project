@@ -2,6 +2,17 @@ from pico2d import *
 import game_framework
 import play_state
 
+PIXEL_PER_METER = (10.0 / 0.3)
+RUN_SPEED_KMPH = 10.0
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION_IDLE = 12
+FRAMES_PER_ACTION_RUN = 12
+
 class Cheerleader:
     image=None
     def __init__(self):
@@ -28,18 +39,20 @@ class Cheerleader:
             self.sx, self.sy = self.x, self.y
             self.ax, self.ay = play_state.Player.x, play_state.Player.y
     def update(self):
-        self.frame = (self.frame + 1) % self.last_frame[self.frame_turn]
+        self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
         #self.t += 0.0005
         if self.x != self.ax:
             if self.x > self.ax:
-                self.x -= 0.5
+                self.dir_lr= -1
             elif self.x < self.ax:
-                self.x +=0.5
+                self.dir_lr = 1
         if self.y != self.ay:
             if self.y > self.ay:
-                self.y -= 0.5
+                self.dir_ud = -1
             elif self.y < self.ay:
-                self.y += 0.5
+                self.dir_ud = 1
+        self.x+=self.dir_lr * RUN_SPEED_PPS * game_framework.frame_time
+        self.y+=self.dir_ud * RUN_SPEED_PPS * game_framework.frame_time
         self.arrival_point_changer()
 
     def frame_turn_changer(self):
@@ -51,23 +64,23 @@ class Cheerleader:
     def draw(self):
 
         if self.dir_lr > 0 and self.dir_ud == 0: # 오른쪽 이동
-            self.image.clip_composite_draw(self.frame * 74, 0, 72, 73,0,'', self.x, self.y, 200,200)
+            self.image.clip_composite_draw(int(self.frame) * 74, 0, 72, 73,0,'', self.x, self.y, 200,200)
         elif self.dir_lr < 0 and self.dir_ud == 0:    #왼쪽 이동
-            self.image.clip_composite_draw(self.frame * 74, 0, 72, 73,0,'h', self.x, self.y, 200,200)
+            self.image.clip_composite_draw(int(self.frame) * 74, 0, 72, 73,0,'h', self.x, self.y, 200,200)
         elif self.dir_lr == 0 and self.dir_ud == 0:   #idle
             if self.dir_last > 0:   #오른쪽을 보는 상태
-                self.image.clip_composite_draw(self.frame * 90, 273, 80, 72,0,'', self.x, self.y, 200,200)
+                self.image.clip_composite_draw(int(self.frame) * 90, 273, 80, 72,0,'', self.x, self.y, 200,200)
             else:               #왼쪽을 보는 상태
-                self.image.clip_composite_draw(self.frame * 90, 273, 80, 72,0,'h', self.x, self.y, 200,200)
+                self.image.clip_composite_draw(int(self.frame) * 90, 273, 80, 72,0,'h', self.x, self.y, 200,200)
         elif self.dir_ud > 0:    #위쪽 이동
             if self.dir_last >0:
-                self.image.clip_composite_draw(self.frame * 74, 0, 72, 73,0,'', self.x, self.y, 200,200)
+                self.image.clip_composite_draw(int(self.frame) * 74, 0, 72, 73,0,'', self.x, self.y, 200,200)
             else:
-                self.image.clip_composite_draw(self.frame * 74, 0, 72, 73,0,'h', self.x, self.y, 200,200)
+                self.image.clip_composite_draw(int(self.frame) * 74, 0, 72, 73,0,'h', self.x, self.y, 200,200)
         elif self.dir_ud < 0:    #아래쪽 이동
             if self.dir_last > 0:
-                self.image.clip_composite_draw(self.frame * 74, 0, 72, 73,0,'', self.x, self.y, 200,200)
+                self.image.clip_composite_draw(int(self.frame) * 74, 0, 72, 73,0,'', self.x, self.y, 200,200)
             else:
-                self.image.clip_composite_draw(self.frame * 74, 0, 72, 73,0,'h', self.x, self.y, 200,200)
+                self.image.clip_composite_draw(int(self.frame) * 74, 0, 72, 73,0,'h', self.x, self.y, 200,200)
 
 
