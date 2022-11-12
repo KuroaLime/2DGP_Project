@@ -7,6 +7,7 @@ from Screen_default_deco import Black_bar
 import title_state
 from stage import *
 
+import Menu_state
 #적 임포트
 from cheerleader import Cheerleader
 from Playable_Kyoko import Kyoko
@@ -21,8 +22,9 @@ def handle_events():
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
+            game_framework.push_state(Menu_state)
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
-            game_framework.quit()
+            game_framework.push_state(Menu_state)
         else:
             Player.handle_event(event)
 # def handle_events():
