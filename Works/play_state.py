@@ -141,6 +141,9 @@ def enter():
     game_world.add_object(Default_deco_bar, 2)
     # running = True
     game_world.add_collison_pairs(Player, background, 'Player:First_stage')
+    for i in range(len(Enermy)):
+        game_world.add_collison_pairs(Player, Enermy[i], 'Player:Enermy')
+        game_world.add_collison_pairs(Enermy[i], background, 'Enermy:First_stage')
 
 def exit():
     game_world.clear()
@@ -151,10 +154,9 @@ def update():
         game_object.update()
     for a, b, group in game_world.all_collision_pairs():
 
-        if group == 'Player:First_stage':
+        if group == 'Player:First_stage' or group == 'Enermy:First_stage':
             if stage_collide(a, b):
                 print('COLLISON : ', group)
-                a.handle_collision(b, group)
                 b.handle_collision(a, group)
         else:
             if collide(a, b):

@@ -62,6 +62,8 @@ class Cheerleader:
         elif self.dir_lr == 0 and self.dir_ud == 0:
             self.frame_turn == 0
     def draw(self):
+        draw_rectangle(*self.get_bb())
+        draw_rectangle(*self.get_TT())
 
         if self.dir_lr > 0 and self.dir_ud == 0: # 오른쪽 이동
             self.image.clip_composite_draw(int(self.frame) * 74, 0, 72, 73,0,'', self.x, self.y, 200,200)
@@ -82,5 +84,21 @@ class Cheerleader:
                 self.image.clip_composite_draw(int(self.frame) * 74, 0, 72, 73,0,'', self.x, self.y, 200,200)
             else:
                 self.image.clip_composite_draw(int(self.frame) * 74, 0, 72, 73,0,'h', self.x, self.y, 200,200)
+    def get_bb(self):   #적, 자판기등의 오브젝트와의 충돌범위
+        return self.x - 60, self.y - 95, self.x + 60, self.y + 85
+    def get_TT(self):   #스테이지와의 충돌
+        return self.x - 60, self.y - 95, self.x + 60, self.y -80
+    def handle_collision(self, other, group):
+        left_a, bottom_a, right_a, top_a = other.get_bb()
+        left_b, bottom_b, right_b, top_b = self.get_bb()
+
+        if left_a < left_b:
+            self.x += 1
+        if right_a > right_b:
+            self.x += -1
+        if top_a > top_b:
+            self.y += -1
+        if bottom_a < bottom_b:
+            self.y += 1
 
 
