@@ -22,7 +22,8 @@ def handle_events():
     for event in events:
         if event.type == SDL_QUIT:
             game_framework.quit()
-            game_framework.push_state(Menu_state)
+        elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_F1):
+            game_framework.quit()
         elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_ESCAPE):
             game_framework.push_state(Menu_state)
         else:

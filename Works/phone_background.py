@@ -8,4 +8,4 @@ class Phone_background:
     def update(self):
         pass
     def draw(self):
-        self.image.clip_composite_draw(2050, 1880, 500, 755,0, 'h', 500, 550, 500, 800)
+        self.image.clip_composite_draw(2050, 1880, 500, 755,0, '', 500, 550, 500, 800)
