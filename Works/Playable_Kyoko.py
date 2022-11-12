@@ -2,6 +2,7 @@ from pico2d import *
 import game_framework
 import game_world
 import canvas_size
+import math
 
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 20.0
@@ -14,8 +15,17 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION_IDLE = 12
 FRAMES_PER_ACTION_RUN = 12
 
-RD,RU,LD,LU,UD,UU,DD,DU,DASHD,DASHU, TIMER,JD,KD=range(13)
-event_name=['RD','RU','LD','LU','DASHD','DASHU','TIMER','JD','KD']
+JUMP_VELOCITY = 10
+PLAYER_WEIGHT = 2
+GRAVITY =0.05
+
+JUMP_SPEED_KMPH = 10.0
+JUMP_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+JUMP_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+JUMP_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+RD,RU,LD,LU,UD,UU,DD,DU,DASHD,DASHU, TIMER,JD,KD,JUMPD,JUMPU=range(15)
+event_name=['RD','RU','LD','LU','DASHD','DASHU','TIMER','JD','KD','JUMPD','JUMPU']
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_d): RD,
@@ -23,6 +33,8 @@ key_event_table = {
     (SDL_KEYDOWN, SDLK_w): UD,
     (SDL_KEYDOWN, SDLK_s): DD,
     (SDL_KEYDOWN, SDLK_TAB): DASHD,
+    (SDL_KEYDOWN, SDLK_k): JUMPD,
+
     (SDL_KEYUP, SDLK_d): RU,
     (SDL_KEYUP, SDLK_a): LU,
     (SDL_KEYUP, SDLK_w): UU,
@@ -36,24 +48,39 @@ class IDLE:
         self.dir_lr = 0
         self.dir_ud = 0
         self.timer = 1000
-
     @staticmethod
     def exit(self, event):
         print('EXIT IDLE')
-
     @staticmethod
     def do(self):
         self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
         self.timer -= 1
         if self.timer == 0:
             self.add_event(TIMER)
+        if self.JumpState:
+            self.JUMP()
+            self.y += self.JumpHeight
+            self.all_jumpHeight += self.JumpHeight
 
+        if self.Jump_V<-1 * JUMP_VELOCITY:
+            print('jumpstate : ',self.JumpState)
+            self.JumpState =False
+            self.JumpHeight = 0.0
+            self.Jump_V = JUMP_VELOCITY
+            self.all_jumpHeight = 0
     @staticmethod
     def draw(self):
-        if self.face_dir == 1:
-            self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, '', self.x, self.y,140,200)
+        if self.JumpState:
+            if self.face_dir == 1:
+                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', self.x, self.y,140,200)
+            else:
+                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', self.x, self.y,140,200)
+
         else:
-            self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', self.x, self.y,140,200)
+            if self.face_dir == 1:
+                self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, '', self.x, self.y,140,200)
+            else:
+                self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', self.x, self.y,140,200)
 
 
 
@@ -80,12 +107,30 @@ class RUN_lr:
         self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
         self.x += self.dir_lr * RUN_SPEED_PPS * game_framework.frame_time
         self.x = clamp(0, self.x, canvas_size.WID)
+
+        if self.JumpState:
+            self.JUMP()
+            self.y += self.JumpHeight
+            self.all_jumpHeight += self.JumpHeight
+        if self.Jump_V<-1 * JUMP_VELOCITY:
+            print('jumpstate : ',self.JumpState)
+            self.JumpState =False
+            self.JumpHeight = 0.0
+            self.Jump_V = JUMP_VELOCITY
+            self.all_jumpHeight = 0
     @staticmethod
     def draw(self):
-        if self.dir_lr == 1:
-            self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', self.x, self.y,140,200)
+        if self.JumpState:
+            if self.face_dir == 1:
+                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', self.x, self.y,140,200)
+            else:
+                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', self.x, self.y,140,200)
+
         else:
-            self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', self.x, self.y,140,200)
+            if self.dir_lr == 1:
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', self.x, self.y,140,200)
+            else:
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', self.x, self.y,140,200)
 class RUN_ud:
     @staticmethod
     def enter(self, event):
@@ -107,12 +152,29 @@ class RUN_ud:
         self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
         self.y += self.dir_ud  * RUN_SPEED_PPS * game_framework.frame_time
         self.y = clamp(0, self.y, canvas_size.HEI)
+        if self.JumpState:
+            self.JUMP()
+            self.y += self.JumpHeight
+            self.all_jumpHeight += self.JumpHeight
+        if self.Jump_V<-1 * JUMP_VELOCITY:
+            print('jumpstate : ',self.JumpState)
+            self.JumpState =False
+            self.JumpHeight = 0.0
+            self.Jump_V = JUMP_VELOCITY
+            self.all_jumpHeight = 0
     @staticmethod
     def draw(self):
-        if self.face_dir == 1:
-            self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', self.x, self.y,140,200)
+        if self.JumpState:
+            if self.face_dir == 1:
+                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', self.x, self.y,140,200)
+            else:
+                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', self.x, self.y,140,200)
+
         else:
-            self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', self.x, self.y,140,200)
+            if self.face_dir == 1:
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', self.x, self.y,140,200)
+            else:
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', self.x, self.y,140,200)
 
 class RUN_diag: #대각선 이동
     @staticmethod
@@ -152,12 +214,30 @@ class RUN_diag: #대각선 이동
         self.y = clamp(0, self.y, canvas_size.HEI)
         self.x = clamp(0, self.x, canvas_size.WID)
 
+        if self.JumpState:
+            self.JUMP()
+            self.y += self.JumpHeight
+            self.all_jumpHeight += self.JumpHeight
+        if self.Jump_V<-1 * JUMP_VELOCITY:
+            print('jumpstate : ',self.JumpState)
+            self.JumpState =False
+            self.JumpHeight = 0.0
+            self.Jump_V = JUMP_VELOCITY
+            self.all_jumpHeight = 0
+            self.all_jumpHeight += self.JumpHeight
     @staticmethod
     def draw(self):
-        if self.dir_lr == 1:
-            self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70, 0, '', self.x, self.y, 140, 200)
+        if self.JumpState:
+            if self.face_dir == 1:
+                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', self.x, self.y,140,200)
+            else:
+                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', self.x, self.y,140,200)
+
         else:
-            self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70, 0, 'h', self.x, self.y, 140, 200)
+            if self.dir_lr == 1:
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70, 0, '', self.x, self.y, 140, 200)
+            else:
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70, 0, 'h', self.x, self.y, 140, 200)
 class SLEEP:
     @staticmethod
     def enter(self, event):
@@ -179,6 +259,7 @@ class SLEEP:
         else:
             self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', self.x, self.y, 140, 200)
 
+import time
 
 class DASH:
     @staticmethod
@@ -211,20 +292,12 @@ class DASH:
             self.image.clip_composite_draw(self.frame * 59, 134, 58, 70, 0, 'h', self.x, self.y, 140, 200)
 
 next_state = {
-    IDLE: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud, TIMER: SLEEP},
-    RUN_lr: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE, UU: RUN_diag, DU: RUN_diag, UD: RUN_diag, DD: RUN_diag},
-    RUN_ud: {RU: RUN_diag, LU: RUN_diag, RD: RUN_diag, LD: RUN_diag, UU: IDLE, DU: IDLE, UD: IDLE, DD: IDLE},
-    RUN_diag: {RU: RUN_ud, LU: RUN_ud, RD: RUN_ud, LD: RUN_ud, UU: RUN_lr, DU: RUN_lr, UD: RUN_lr, DD: RUN_lr},
-    SLEEP: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud, TIMER: SLEEP}
+    IDLE: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud,JUMPD: IDLE, TIMER: SLEEP},
+    RUN_lr: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE, UU: RUN_diag, DU: RUN_diag, UD: RUN_diag,JUMPD: RUN_lr, DD: RUN_diag},
+    RUN_ud: {RU: RUN_diag, LU: RUN_diag, RD: RUN_diag, LD: RUN_diag, UU: IDLE, DU: IDLE, UD: IDLE,JUMPD: RUN_ud, DD: IDLE},
+    RUN_diag: {RU: RUN_ud, LU: RUN_ud, RD: RUN_ud, LD: RUN_ud, UU: RUN_lr, DU: RUN_lr, UD: RUN_lr,JUMPD: RUN_diag, DD: RUN_lr},
+    SLEEP: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud, JUMPD: IDLE, TIMER: SLEEP}
 }
-# next_state = {
-#     DASH: {RU: IDLE,  LU: IDLE, UU:DASH, DU:IDLE, RD: DASH,  LD: DASH,UD: DASH, DD:DASH},
-#     IDLE:  {RU: RUN_lr,  LU: RUN_lr, UU:RUN_ud, DU:RUN_ud, RD: RUN_lr,  LD: RUN_lr,UD: RUN_ud, DD:RUN_ud,DASHD:IDLE, DASHU:IDLE, TIMER: SLEEP},
-#     RUN_lr:   {RD: RUN_diag,LD: RUN_diag, UD:RUN_ud, DD: RUN_ud,RU: IDLE, LU: IDLE, UU:RUN_lr, DU:RUN_lr,DASHD:DASH, DASHU:RUN_lr},
-#     RUN_ud:   {RD: RUN_lr,LD: RUN_lr, UD:RUN_diag, DD: RUN_diag,RU: RUN_ud, LU: RUN_ud, UU:IDLE, DU:IDLE, DASHD:DASH, DASHU:RUN_ud},
-#     RUN_diag:   {RD: RUN_ud,LD: RUN_ud, UD:RUN_lr, DD: RUN_lr,RU: RUN_ud, LU: RUN_ud, UU:RUN_lr, DU:RUN_lr, DASHD:DASH, DASHU:RUN_ud},
-#     SLEEP: {RU: RUN_lr,  LU: RUN_lr, UU:RUN_ud, DU:RUN_ud, RD: RUN_lr,  LD: RUN_lr,UD: RUN_ud, DD:RUN_ud, TIMER: SLEEP}
-# }
 class Kyoko:
     image =None
     def __init__(self):
@@ -235,6 +308,11 @@ class Kyoko:
         #                  16,     #run
         #                  6,7,12,     # 첫 어택: 6,  두번째 어택: 7,      세번째 어택: 12
         #                  ]
+        self.JumpHeight =0.0
+        self.Jump_V=JUMP_VELOCITY
+        self.JumpState =False
+        self.JumpTime=0
+        self.all_jumpHeight=0
         self.dir_lr= 0 #오른쪽 왼쪽
         self.dir_ud =0 # 위 아래
         self.face_dir =1 #오른쪽 왼쪽 전 상태
@@ -249,12 +327,16 @@ class Kyoko:
 
         if self.event_que:
             event = self.event_que.pop()
+            if event == JUMPD and self.JumpState == False:
+                self.Jump_state()
             self.cur_state.exit(self, event)
             try:
                 self.cur_state = next_state[self.cur_state][event]
             except KeyError:
                 print('ERROR: ', self.cur_state, event_name[event])
             self.cur_state.enter(self, event)
+        if self.JumpState:
+            self.JUMP()
         # self.frame = (self.frame + 1) % self.last_frame[self.frame_turn]
         #
         # if self.dir_lr != 0 or self.dir_ud != 0:
@@ -396,7 +478,29 @@ class Kyoko:
     def get_bb(self):   #적, 자판기등의 오브젝트와의 충돌범위
         return self.x - 45, self.y - 95, self.x + 45, self.y + 85
     def get_TT(self):   #스테이지와의 충돌
-        return self.x - 45, self.y - 95, self.x + 45, self.y -80
+        print('y : ', self.y)
+        print('jumpHeight get : ', self.JumpHeight)
+        print('y-Jump : ', self.y-self.JumpHeight)
+
+        print('y+ height - height : ', self.y-self.all_jumpHeight)
+        return self.x - 45, (self.y-self.all_jumpHeight) - 95, self.x + 45, (self.y -self.all_jumpHeight) -80
 
     def handle_collision(self, other, group):
         pass
+
+    def JUMP(self):
+            # if self.Jump_V > 0:
+            #     self.JumpHeight = (0.5 * PLAYER_WEIGHT * (self.Jump_V * self.Jump_V))
+            # else:
+            #     self.JumpHeight = -(0.5 * PLAYER_WEIGHT * (self.Jump_V * self.Jump_V))
+            # self.Jump_V -=GRAVITY*game_framework.frame_time
+        self.JumpHeight = self.Jump_V * JUMP_SPEED_PPS*game_framework.frame_time
+        self.Jump_V -= GRAVITY
+        print('JumpHeight : ', self.JumpHeight)
+    def Jump_state(self):
+
+        if self.JumpState:
+            self.JumpState = False
+        else:
+            self.JumpState = True
+        print('jump state : ',self.JumpState )
