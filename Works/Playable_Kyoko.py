@@ -3,12 +3,18 @@ import game_framework
 import game_world
 import canvas_size
 import math
+import time
 
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 20.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+DASH_SPEED_KMPH = 30.0
+DASH_SPEED_MPM = (DASH_SPEED_KMPH * 1000.0 / 60.0)
+DASH_SPEED_MPS = (DASH_SPEED_MPM / 60.0)
+DASH_SPEED_PPS = (DASH_SPEED_MPS * PIXEL_PER_METER)
 
 TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
@@ -48,6 +54,9 @@ class IDLE:
         self.dir_lr = 0
         self.dir_ud = 0
         self.timer = 1000
+        self.DashState = False
+        self.dash_lr =0
+        self.dash_ud =0
     @staticmethod
     def exit(self, event):
         print('EXIT IDLE')
@@ -105,7 +114,10 @@ class RUN_lr:
     @staticmethod
     def do(self):
         self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
-        self.x += self.dir_lr * RUN_SPEED_PPS * game_framework.frame_time
+        if self.DashState:
+            self.x += self.dir_lr * (DASH_SPEED_PPS) * game_framework.frame_time
+        else:
+            self.x += self.dir_lr * (RUN_SPEED_PPS) * game_framework.frame_time
         self.x = clamp(0, self.x, canvas_size.WID)
 
         if self.JumpState:
@@ -118,6 +130,11 @@ class RUN_lr:
             self.JumpHeight = 0.0
             self.Jump_V = JUMP_VELOCITY
             self.all_jumpHeight = 0
+        if self.DashState:
+            self.Dash()
+
+
+
     @staticmethod
     def draw(self):
         if self.JumpState:
@@ -150,7 +167,10 @@ class RUN_ud:
     @staticmethod
     def do(self):
         self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
-        self.y += self.dir_ud  * RUN_SPEED_PPS * game_framework.frame_time
+        if self.DashState:
+            self.y += self.dir_ud * DASH_SPEED_PPS * game_framework.frame_time
+        else:
+            self.y += self.dir_ud  * RUN_SPEED_PPS * game_framework.frame_time
         self.y = clamp(0, self.y, canvas_size.HEI)
         if self.JumpState:
             self.JUMP()
@@ -209,8 +229,12 @@ class RUN_diag: #대각선 이동
     @staticmethod
     def do(self):
         self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
-        self.x += self.dir_lr * RUN_SPEED_PPS * game_framework.frame_time
-        self.y += self.dir_ud * RUN_SPEED_PPS * game_framework.frame_time
+        if self.DashState:
+            self.x += self.dir_lr * (DASH_SPEED_PPS) * game_framework.frame_time
+            self.y += self.dir_ud * (DASH_SPEED_PPS) * game_framework.frame_time
+        else:
+            self.x += self.dir_lr * RUN_SPEED_PPS * game_framework.frame_time
+            self.y += self.dir_ud * RUN_SPEED_PPS * game_framework.frame_time
         self.y = clamp(0, self.y, canvas_size.HEI)
         self.x = clamp(0, self.x, canvas_size.WID)
 
@@ -259,43 +283,11 @@ class SLEEP:
         else:
             self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', self.x, self.y, 140, 200)
 
-import time
-
-class DASH:
-    @staticmethod
-    def enter(self, event):
-        print('ENTER RUN_ud')
-        if event == UD:
-            self.dir_ud += 1
-        elif event == DD:
-            self.dir_ud -= 1
-        elif event == UU:
-            self.dir_ud -= 1
-        elif event == DU:
-            self.dir_ud += 1
-
-    @staticmethod
-    def exit(self, event):
-        print('EXIT RUN_ud')
-
-    @staticmethod
-    def do(self):
-        self.frame = (self.frame + 1) % 12
-        self.y += self.dir_ud * 1
-        self.y = clamp(0, self.y, 1080)
-
-    @staticmethod
-    def draw(self):
-        if self.face_dir == 1:
-            self.image.clip_composite_draw(self.frame * 59, 134, 58, 70, 0, '', self.x, self.y, 140, 200)
-        else:
-            self.image.clip_composite_draw(self.frame * 59, 134, 58, 70, 0, 'h', self.x, self.y, 140, 200)
-
 next_state = {
     IDLE: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud,JUMPD: IDLE, TIMER: SLEEP},
-    RUN_lr: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE, UU: RUN_diag, DU: RUN_diag, UD: RUN_diag,JUMPD: RUN_lr, DD: RUN_diag},
-    RUN_ud: {RU: RUN_diag, LU: RUN_diag, RD: RUN_diag, LD: RUN_diag, UU: IDLE, DU: IDLE, UD: IDLE,JUMPD: RUN_ud, DD: IDLE},
-    RUN_diag: {RU: RUN_ud, LU: RUN_ud, RD: RUN_ud, LD: RUN_ud, UU: RUN_lr, DU: RUN_lr, UD: RUN_lr,JUMPD: RUN_diag, DD: RUN_lr},
+    RUN_lr: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE, UU: RUN_diag, DU: RUN_diag, UD: RUN_diag, DD: RUN_diag,JUMPD: RUN_lr},
+    RUN_ud: {RU: RUN_diag, LU: RUN_diag, RD: RUN_diag, LD: RUN_diag, UU: IDLE, DU: IDLE, UD: IDLE, DD: IDLE,JUMPD: RUN_ud},
+    RUN_diag: {RU: RUN_ud, LU: RUN_ud, RD: RUN_ud, LD: RUN_ud, UU: RUN_lr, DU: RUN_lr, UD: RUN_lr, DD: RUN_lr,JUMPD: RUN_diag},
     SLEEP: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud, JUMPD: IDLE, TIMER: SLEEP}
 }
 class Kyoko:
@@ -313,6 +305,11 @@ class Kyoko:
         self.JumpState =False
         self.JumpTime=0
         self.all_jumpHeight=0
+
+        self.DashState = False
+        self.Dash_lr=0
+        self.Dash_ud=0
+
         self.dir_lr= 0 #오른쪽 왼쪽
         self.dir_ud =0 # 위 아래
         self.face_dir =1 #오른쪽 왼쪽 전 상태
@@ -329,6 +326,8 @@ class Kyoko:
             event = self.event_que.pop()
             if event == JUMPD and self.JumpState == False:
                 self.Jump_state()
+            elif event == DASHD and self.JumpState == False:
+                self.Dash_state()
             self.cur_state.exit(self, event)
             try:
                 self.cur_state = next_state[self.cur_state][event]
@@ -504,3 +503,20 @@ class Kyoko:
         else:
             self.JumpState = True
         print('jump state : ',self.JumpState )
+
+    def Dash(self):
+        if self. dir_lr == 1:
+            self.dash_lr +=1
+        elif self.dir_lr == -1:
+            self.dash_lr -= 1
+        if self.dir_ud == 1:
+            self.dash_ud +=1
+        elif self.dir_ud == -1:
+            self.dash_ud -= 1
+    def Dash_state(self):
+
+        if self.DashState:
+            self.DashState = False
+        else:
+            self.DashState = True
+        print('Dash state : ',self.DashState )
