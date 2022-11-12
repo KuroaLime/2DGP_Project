@@ -127,7 +127,10 @@ def enter():
     Enermy = Cheerleader()
     background=First_Stage(0)
     Default_deco_bar= Black_bar()
-
+    #0 -> 배경
+    #1 -> 오브젝트
+    #2 -> 플레이어 상태 표기
+    #3 -> 플레이어
     game_world.add_object(Player, 3)
     game_world.add_object(Enermy, 3)
     game_world.add_object(background, 0)

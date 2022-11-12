@@ -1,32 +1,44 @@
 import game_framework
 from pico2d import *
-
-import title_state
+import menu_world
 import play_state
-import random
-image=None
+from phone_window import Phone_boarder
+from phone_background import Phone_background
 
+
+Menu_window=None
+Menu_background=None
 
 def enter():
-    global image
-    image=load_image('Resource/Menu/Phone.png')
+    hide_cursor()
+    global Menu_window,Menu_background
 
-    pass
+    Menu_window = Phone_boarder()
+    Menu_background = Phone_background()
+
+    menu_world.add_object(Menu_window, 1)
+    menu_world.add_object(Menu_background, 0)
 
 def exit():
-    global image
-    del image
-
     pass
 
 def update():
-    pass
-
+    for game_object in menu_world.all_objects():
+        game_object.update()
 def draw():
     clear_canvas()
-    play_state.draw_world()
-    image.clip_composite_draw(0, 0, 845, 1128, 0, 'h',500,550,700, 1000)
+    draw_world()
     update_canvas()
+
+def draw_world():
+    play_state.draw_world()
+    for game_object in menu_world.all_objects():
+        game_object.draw()
+
+def pause():
+    pass
+
+def resume():
     pass
 
 def handle_events():
@@ -38,6 +50,3 @@ def handle_events():
             match event.key:
                 case pico2d.SDLK_ESCAPE:
                     game_framework.pop_state()
-
-
-

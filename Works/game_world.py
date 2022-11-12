@@ -27,7 +27,6 @@ def clear():
         del o
     for layer in world:
         layer.clear()
-
 def add_collison_pairs(a,b,group):
     if group not in collision_group:
         print('add new group')
