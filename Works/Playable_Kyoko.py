@@ -373,11 +373,13 @@ class Kyoko:
         self.event_que = []
         self.cur_state = IDLE
         self.cur_state.enter(self, None)
+        self.event_test = None
     def update(self):
         self.cur_state.do(self)
 
         if self.event_que:
             event = self.event_que.pop()
+            self.event_test = event
             if event == JUMPD and self.JumpState == False:
                 self.Jump_state()
             elif event == DASHD and self.JumpState == False:
@@ -535,7 +537,9 @@ class Kyoko:
         return self.x - 45, (self.y-self.all_jumpHeight) - 95, self.x + 45, (self.y -self.all_jumpHeight) -80
 
     def handle_collision(self, other, group):
-        pass
+        if group == 'Player:Vending_machine':
+            if self.event_test == ATKD:
+                other.state = 1
 
     def JUMP(self):
             # if self.Jump_V > 0:

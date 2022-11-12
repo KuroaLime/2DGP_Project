@@ -12,6 +12,8 @@ import Menu_state
 from cheerleader import Cheerleader
 from school_boy import School_Boy
 from Playable_Kyoko import Kyoko
+from destructible_object import Vending_machine
+
 # class Grass:
 #     def __init__(self):
 #         self.image = load_image('grass.png')
@@ -117,12 +119,12 @@ background=None
 running=None
 
 Default_deco_bar = None
-
+vending_maching= None
 
 def enter():
     global Player,Enermy
     global background, running
-    global Default_deco_bar
+    global Default_deco_bar,vending_maching
 
     hide_cursor()
 
@@ -130,6 +132,7 @@ def enter():
     Enermy = [Cheerleader(),School_Boy()]
     background=First_Stage(0)
     Default_deco_bar= Black_bar()
+    vending_maching=Vending_machine()
     #0 -> 배경
     #1 -> 오브젝트
     #2 -> 플레이어 상태 표기
@@ -139,8 +142,10 @@ def enter():
         game_world.add_object(Enermy[i], 3)
     game_world.add_object(background, 0)
     game_world.add_object(Default_deco_bar, 2)
+    game_world.add_object(vending_maching, 1)
     # running = True
     game_world.add_collison_pairs(Player, background, 'Player:First_stage')
+    game_world.add_collison_pairs(Player, vending_maching, 'Player:Vending_machine')
     for i in range(len(Enermy)):
         game_world.add_collison_pairs(Player, Enermy[i], 'Player:Enermy')
         game_world.add_collison_pairs(Enermy[i], background, 'Enermy:First_stage')
