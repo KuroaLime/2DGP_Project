@@ -20,7 +20,9 @@ TIME_PER_ACTION = 0.5
 ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION_IDLE = 12
 FRAMES_PER_ACTION_RUN = 12
-
+FRAMES_PER_ACTION_NORMAL_ATTACK00 = 6
+FRAMES_PER_ACTION_NORMAL_ATTACK01 = 7
+FRAMES_PER_ACTION_NORMAL_ATTACK02 = 12
 JUMP_VELOCITY = 10
 PLAYER_WEIGHT = 2
 GRAVITY =0.05
@@ -282,24 +284,24 @@ class Normal_attack:
     @staticmethod
     def enter(self, event):
         print('ENTER Normal_attack')
-
+        self.last_attack_frame=0
+        self.frame = 0
     @staticmethod
     def exit(self, event):
         print('EXIT Normal_attack')
         self.attack_turn += 1
         if self.attack_turn == 3:
             self.attack_turn = 0
-        self.last_attack_frame = 0
         self.attack_one_complete = False
     @staticmethod
     def do(self):
         if self.attack_one_complete == False:
             if self.attack_turn == 0:
-                self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 6
+                self.frame = (self.frame + FRAMES_PER_ACTION_NORMAL_ATTACK00 * ACTION_PER_TIME * game_framework.frame_time) % 6
             elif self.attack_turn == 1:
-                self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 7
+                self.frame = (self.frame + FRAMES_PER_ACTION_NORMAL_ATTACK01 * ACTION_PER_TIME * game_framework.frame_time) % 7
             elif self.attack_turn == 2:
-                self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
+                self.frame = (self.frame + FRAMES_PER_ACTION_NORMAL_ATTACK02 * ACTION_PER_TIME * game_framework.frame_time) % 12
 
             print('frame : ', self.frame, 'last_attack_frame : ',self.last_attack_frame)
             if self.frame < self.last_attack_frame:

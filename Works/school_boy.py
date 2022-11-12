@@ -13,10 +13,10 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION_IDLE = 12
 FRAMES_PER_ACTION_RUN = 12
 
-class Cheerleader:
+class School_Boy:
     image=None
     def __init__(self):
-        self.x, self.y, self.t= random.randint(400,500), random.randint(200,400),0.0
+        self.x, self.y, self.t= random.randint(700,900), random.randint(200,400),0.0
         self.sx,self.sy=self.x, self.y
         self.ax,self.ay = play_state.Player.x,play_state.Player.y
         self.frame = 0
@@ -28,14 +28,11 @@ class Cheerleader:
         self.dir_lr= 0 #오른쪽 왼쪽
         self.dir_ud =0 # 위 아래
         self.dir_last =1 #오른쪽 왼쪽 전 상태
-        if Cheerleader.image == None:
-            Cheerleader.image = load_image('Character/enermy_cheerleader.png')
-        #self.image_L = load_image('Player_kyoko_L.png')
+        if School_Boy.image == None:
+            School_Boy.image = load_image('Character/enermy_cheerleader.png')
 
     def arrival_point_changer(self):
         if self.ax!=play_state.Player.x or self.ay!=play_state.Player.y:
-            # if self.t >= 1.0:
-            #     self.t = 0
             self.sx, self.sy = self.x, self.y
             self.ax, self.ay = play_state.Player.x, play_state.Player.y
     def update(self):

@@ -10,6 +10,7 @@ from stage import *
 import Menu_state
 #적 임포트
 from cheerleader import Cheerleader
+from school_boy import School_Boy
 from Playable_Kyoko import Kyoko
 # class Grass:
 #     def __init__(self):
@@ -117,6 +118,7 @@ running=None
 
 Default_deco_bar = None
 
+
 def enter():
     global Player,Enermy
     global background, running
@@ -125,7 +127,7 @@ def enter():
     hide_cursor()
 
     Player = Kyoko()
-    Enermy = Cheerleader()
+    Enermy = [Cheerleader(),School_Boy()]
     background=First_Stage(0)
     Default_deco_bar= Black_bar()
     #0 -> 배경
@@ -133,7 +135,8 @@ def enter():
     #2 -> 플레이어 상태 표기
     #3 -> 플레이어
     game_world.add_object(Player, 3)
-    game_world.add_object(Enermy, 3)
+    for i in range(len(Enermy)):
+        game_world.add_object(Enermy[i], 3)
     game_world.add_object(background, 0)
     game_world.add_object(Default_deco_bar, 2)
     # running = True
