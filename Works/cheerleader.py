@@ -65,9 +65,9 @@ class Cheerleader:
         draw_rectangle(*self.get_bb())
         draw_rectangle(*self.get_TT())
 
-        if self.dir_lr > 0 and self.dir_ud == 0: # 오른쪽 이동
+        if self.dir_lr > 0: # 오른쪽 이동
             self.image.clip_composite_draw(int(self.frame) * 74, 0, 72, 73,0,'', self.x, self.y, 200,200)
-        elif self.dir_lr < 0 and self.dir_ud == 0:    #왼쪽 이동
+        elif self.dir_lr < 0:    #왼쪽 이동
             self.image.clip_composite_draw(int(self.frame) * 74, 0, 72, 73,0,'h', self.x, self.y, 200,200)
         elif self.dir_lr == 0 and self.dir_ud == 0:   #idle
             if self.dir_last > 0:   #오른쪽을 보는 상태
