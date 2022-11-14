@@ -161,11 +161,11 @@ def update():
 
         if group == 'Player:First_stage' or group == 'Enermy:First_stage':
             if stage_collide(a, b):
-                print('COLLISON : ', group)
+                # print('COLLISON : ', group)
                 b.handle_collision(a, group)
         else:
             if collide(a, b):
-                print('COLLISON : ', group)
+                # print('COLLISON : ', group)
                 a.handle_collision(b, group)
                 b.handle_collision(a, group)
 def draw():

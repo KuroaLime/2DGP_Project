@@ -32,8 +32,8 @@ JUMP_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-RD,RU,LD,LU,UD,UU,DD,DU,DASHD,DASHU,ATKD,ATKU,JUMPD,JUMPU, TIMER=range(15)
-event_name=['RD','RU','LD','LU','DASHD','DASHU','TIMER','JD','KD','JUMPD','JUMPU']
+RD,RU,LD,LU,UD,UU,DD,DU,DASHD,DASHU,ATKD,ATKU,JUMPD,JUMPU,ATK_END, TIMER=range(16)
+event_name=['RD','RU','LD','LU','DASHD','DASHU','TIMER','JD','KD','JUMPD','JUMPU','ATK_END']
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_d): RD,
@@ -49,7 +49,7 @@ key_event_table = {
     (SDL_KEYUP, SDLK_w): UU,
     (SDL_KEYUP, SDLK_s): DU,
     (SDL_KEYUP, SDLK_TAB): DASHU,
-    (SDL_KEYUP, SDLK_j): ATKU
+    # (SDL_KEYUP, SDLK_j): ATKU
 }
 class IDLE:
     @staticmethod
@@ -61,6 +61,9 @@ class IDLE:
         self.DashState = False
         self.dash_lr =0
         self.dash_ud =0
+        self.last_attack_frame = 0
+        self.frame = 0
+        self.attacking = False
     @staticmethod
     def exit(self, event):
         print('EXIT IDLE')
@@ -284,18 +287,16 @@ class Normal_attack:
     @staticmethod
     def enter(self, event):
         print('ENTER Normal_attack')
-        self.last_attack_frame=0
-        self.frame = 0
+        if self.attacking == False:
+            self.frame = 0
+            self.attacking = True
     @staticmethod
     def exit(self, event):
         print('EXIT Normal_attack')
-        self.attack_turn += 1
-        if self.attack_turn == 3:
-            self.attack_turn = 0
-        self.attack_one_complete = False
     @staticmethod
     def do(self):
-        if self.attack_one_complete == False:
+        if self.attacking == True:
+            print('attack_turn : ', self.attack_turn)
             if self.attack_turn == 0:
                 self.frame = (self.frame + FRAMES_PER_ACTION_NORMAL_ATTACK00 * ACTION_PER_TIME * game_framework.frame_time) % 6
             elif self.attack_turn == 1:
@@ -305,13 +306,17 @@ class Normal_attack:
 
             print('frame : ', self.frame, 'last_attack_frame : ',self.last_attack_frame)
             if self.frame < self.last_attack_frame:
-                self.attack_one_complete =True
+                self.attack_turn += 1
+                if self.attack_turn == 3:
+                    self.attack_turn = 0
+                self.attacking =False
+                self.Complete_ATK()
             self.last_attack_frame = self.frame
         else:
             self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
     @staticmethod
     def draw(self):
-        if self.attack_one_complete == False:
+        if self.attacking == True:
             if self.attack_turn == 0:
                 if self.face_dir == 1:
                     self.image.clip_composite_draw(int(self.frame) * 65, 484, 60, 67, 0, '', self.x, self.y, 180, 200)
@@ -333,12 +338,12 @@ class Normal_attack:
             else:
                 self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', self.x, self.y, 140, 200)
 next_state = {
-    IDLE: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud,JUMPD: IDLE, TIMER: SLEEP,ATKU:IDLE,ATKD:Normal_attack},
-    RUN_lr: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE, UU: RUN_diag, DU: RUN_diag, UD: RUN_diag, DD: RUN_diag,JUMPD: RUN_lr,ATKU:RUN_lr,ATKD:Normal_attack},
-    RUN_ud: {RU: RUN_diag, LU: RUN_diag, RD: RUN_diag, LD: RUN_diag, UU: IDLE, DU: IDLE, UD: IDLE, DD: IDLE,JUMPD: RUN_ud,ATKU:RUN_ud,ATKD:Normal_attack},
-    RUN_diag: {RU: RUN_ud, LU: RUN_ud, RD: RUN_ud, LD: RUN_ud, UU: RUN_lr, DU: RUN_lr, UD: RUN_lr, DD: RUN_lr,JUMPD: RUN_diag,ATKU:IDLE,ATKD:Normal_attack},
-    Normal_attack: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud,JUMPD: Normal_attack,ATKU:IDLE,ATKD:Normal_attack},
-    SLEEP: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud, JUMPD: IDLE, TIMER: SLEEP,ATKU:Normal_attack,ATKD:Normal_attack}
+    IDLE: {RU: IDLE, LU: IDLE, RD: RUN_lr, LD: RUN_lr, UU: IDLE, DU: IDLE, UD: RUN_ud, DD: RUN_ud,JUMPD: IDLE, TIMER: SLEEP,ATKD:Normal_attack,ATK_END:IDLE},
+    RUN_lr: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE, UU: RUN_diag, DU: RUN_diag, UD: RUN_diag, DD: RUN_diag,JUMPD: RUN_lr,ATKD:Normal_attack,ATK_END:IDLE},
+    RUN_ud: {RU: RUN_diag, LU: RUN_diag, RD: RUN_diag, LD: RUN_diag, UU: IDLE, DU: IDLE, UD: IDLE, DD: IDLE,JUMPD: RUN_ud,ATKD:Normal_attack,ATK_END:IDLE},
+    RUN_diag: {RU: RUN_ud, LU: RUN_ud, RD: RUN_ud, LD: RUN_ud, UU: RUN_lr, DU: RUN_lr, UD: RUN_lr, DD: RUN_lr,JUMPD: RUN_diag,ATKD:Normal_attack,ATK_END:IDLE},
+    Normal_attack: {RU: Normal_attack, LU: Normal_attack, RD: Normal_attack, LD: Normal_attack, UU: Normal_attack, DU: Normal_attack, UD: Normal_attack, DD: Normal_attack,JUMPD: Normal_attack,ATKD:Normal_attack,ATK_END:IDLE},
+    SLEEP: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud, JUMPD: IDLE, TIMER: SLEEP,ATKD:Normal_attack,ATK_END:IDLE}
 }
 class Kyoko:
     image =None
@@ -361,7 +366,7 @@ class Kyoko:
         self.Dash_ud=0
 
         self.attack_turn=0
-        self.attack_one_complete =False
+        self.attacking =False
         self.last_attack_frame=0
 
         self.dir_lr= 0 #오른쪽 왼쪽
@@ -392,72 +397,6 @@ class Kyoko:
             self.cur_state.enter(self, event)
         if self.JumpState:
             self.JUMP()
-        # self.frame = (self.frame + 1) % self.last_frame[self.frame_turn]
-        #
-        # if self.dir_lr != 0 or self.dir_ud != 0:
-        #     if self.run_state ==0:  #걷기와 달리기 속도 차이
-        #         self.x += self.dir_lr * 5
-        #         self.y += self.dir_ud * 5
-        #     else:
-        #         self.x += self.dir_lr * 10
-        #         self.y += self.dir_ud * 10
-        #
-        # elif self.frame_turn <6 :   #노멀 어택 대기 시간
-        #     if self.frame>=self.last_frame[self.frame_turn]-1 and self.normal_attack_frame_state == 1:
-        #         self.normal_attack_frame_state = 0
-        #     self.normal_attack_time += 0.1
-        #     if self.normal_attack_time >=1.0:
-        #         self.normal_attack_stack=0
-        #
-        # if self.jump_turn == True:
-        #     self.y += self.jump_progress_v
-        #     self.jump_progress_v = self.jump_progress_v - self.jump_g
-        #
-        #     if self.jump_last_v-1 == self.jump_progress_v:
-        #         self.jump_turn = False
-        #         self.jump_progress_v=15
-    # def run_dir_R(self):
-    #     if self.run_state > 0:
-    #         self.image.clip_draw(self.frame * 59, 134, 58, 70, self.x, self.y)
-    #     else:
-    #         self.image.clip_draw(self.frame * 40, 0, 40, 70, self.x, self.y)
-    #
-    # def run_dir_L(self):
-    #     if self.run_state < 0:
-    #         self.image_L.clip_draw(self.frame * 62, 136, 58, 70, self.x, self.y)
-    #     else:
-    #         self.image_L.clip_draw(self.frame * 45, 69, 41, 68, self.x, self.y)
-    #
-    # def jump_dir_R(self):
-    #     if self.jump_progress_v > 0:
-    #         self.image.clip_draw(0 * 45, 346, 45, 69, self.x, self.y)
-    #     else:
-    #         self.image.clip_draw(1 * 45, 346, 45, 69, self.x, self.y)
-    # def jump_dir_L(self):
-    #     if self.jump_progress_v > 0:
-    #         self.image_L.clip_draw(0 * 50, 410, 50, 69, self.x, self.y)
-    #     else:
-    #         self.image_L.clip_draw(1 * 50, 410, 50, 69, self.x, self.y)
-    # def normal_attack_changer(self):
-    #     if self.last_frame[self.frame_turn] - 1 == self.frame:
-    #         self.frame = 0
-    #         self.frame_turn = 0
-    #         if self.j_keyup >= 1:
-    #             self.j_keyup =0
-    #             self.normal_attack_stack = self.normal_attack_stack + 1
-    #             if self.normal_attack_stack >= 3:
-    #                 self.normal_attack_stack = 0
-    #
-    # def frame_turn_changer(self):
-    #     if self.jump_turn == False:
-    #         if self.run_state != 0:
-    #             if self.frame_turn != 2:
-    #                 self.frame_turn == 2
-    #         elif self.dir_lr != 0 or self.dir_ud != 0:
-    #             if self.frame_turn != 1:
-    #                 self.frame_turn == 1
-    #         elif self.dir_lr == 0 and self.dir_ud == 0:
-    #             self.frame_turn == 0
     def draw(self):
         self.cur_state.draw(self)
         draw_rectangle(*self.get_bb())
@@ -527,7 +466,7 @@ class Kyoko:
 
     def handle_event(self, event):
         if (event.type, event.key) in key_event_table:
-            print('event_type : ',event.type,', event_key : ',event.key)
+            # print('event_type : ',event.type,', event_key : ',event.key)
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
 
@@ -571,3 +510,5 @@ class Kyoko:
             self.DashState = False
         else:
             self.DashState = True
+    def Complete_ATK(self):
+        self.add_event(ATK_END)

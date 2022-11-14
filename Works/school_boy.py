@@ -88,7 +88,7 @@ class School_Boy:
         return self.x - 70, self.y - 95, self.x + 45, self.y - 80
 
     def handle_collision(self, other, group):
-        print('Boy and Player collsion')
+        # print('Boy and Player collsion')
         left_a, bottom_a, right_a, top_a = other.get_bb()
         left_b, bottom_b, right_b, top_b = self.get_bb()
 
