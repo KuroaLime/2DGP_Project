@@ -163,6 +163,10 @@ def update():
             if stage_collide(a, b):
                 # print('COLLISON : ', group)
                 b.handle_collision(a, group)
+        elif group == 'Player:Enermy':
+            if moving_obj_collide(a, b):
+                # print('COLLISON : ', group)
+                b.handle_collision(a, group)
         else:
             if collide(a, b):
                 # print('COLLISON : ', group)
@@ -188,7 +192,16 @@ def collide(a,b):
     if bottom_a > top_b: return False
 
     return True
+def moving_obj_collide(a,b):
+    left_a, bottom_a, right_a, top_a = a.get_TT()
+    left_b, bottom_b, right_b, top_b = b.get_TT()
 
+    if left_a > right_b : return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
+
+    return True
 def stage_collide(a,b):
     left_a, bottom_a, right_a, top_a = a.get_TT()
     left_b, bottom_b, right_b, top_b = b.get_bb()
