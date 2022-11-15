@@ -355,30 +355,32 @@ class Kyoko:
         #                  16,     #run
         #                  6,7,12,     # 첫 어택: 6,  두번째 어택: 7,      세번째 어택: 12
         #                  ]
-        self.JumpHeight =0.0
-        self.Jump_V=JUMP_VELOCITY
-        self.JumpState =False
-        self.JumpTime=0
-        self.all_jumpHeight=0
+        self.JumpHeight = 0.0
+        self.Jump_V = JUMP_VELOCITY
+        self.JumpState = False
+        self.JumpTime = 0
+        self.all_jumpHeight = 0
 
         self.DashState = False
-        self.Dash_lr=0
-        self.Dash_ud=0
+        self.Dash_lr = 0
+        self.Dash_ud = 0
 
         self.attack_turn=0
         self.attacking =False
         self.last_attack_frame=0
 
-        self.dir_lr= 0 #오른쪽 왼쪽
-        self.dir_ud =0 # 위 아래
-        self.face_dir =1 #오른쪽 왼쪽 전 상태
-        self.dash_state=0 #Dash 상태
+        self.dir_lr = 0 #오른쪽 왼쪽
+        self.dir_ud = 0 # 위 아래
+        self.face_dir = 1 #오른쪽 왼쪽 전 상태
+        self.dash_state = 0 #Dash 상태
         if Kyoko.image == None:
             Kyoko.image = load_image('Character/Player_kyoko.png')
         self.event_que = []
         self.cur_state = IDLE
         self.cur_state.enter(self, None)
         self.event_test = None
+
+        self.item = [0, 0, 0]
     def update(self):
         self.cur_state.do(self)
 

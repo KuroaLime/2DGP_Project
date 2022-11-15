@@ -14,6 +14,7 @@ from school_boy import School_Boy
 from school_girl import School_Girl
 from Playable_Kyoko import Kyoko
 from destructible_object import Vending_machine
+from item import Apple
 
 # class Grass:
 #     def __init__(self):
@@ -41,19 +42,20 @@ running=None
 
 Default_deco_bar = None
 vending_maching= None
-
+item=None
 def enter():
     global Player,Enermy
     global background, running
-    global Default_deco_bar,vending_maching
+    global Default_deco_bar,vending_maching, item
 
     hide_cursor()
 
     Player = Kyoko()
     Enermy = [Cheerleader(),School_Boy(),School_Girl()]
-    background=First_Stage(0)
-    Default_deco_bar= Black_bar()
-    vending_maching=Vending_machine()
+    background = First_Stage(0)
+    Default_deco_bar = Black_bar()
+    vending_maching = Vending_machine()
+    item = [Apple()]
     #0 -> 배경
     #1 -> 오브젝트
     #2 -> 플레이어 상태 표기
@@ -61,6 +63,8 @@ def enter():
     game_world.add_object(Player, 3)
     for i in range(len(Enermy)):
         game_world.add_object(Enermy[i], 3)
+    for i in range(len(item)):
+        game_world.add_object(item[i],1)
     game_world.add_object(background, 0)
     game_world.add_object(Default_deco_bar, 2)
     game_world.add_object(vending_maching, 1)
@@ -70,6 +74,8 @@ def enter():
     for i in range(len(Enermy)):
         game_world.add_collison_pairs(Player, Enermy[i], 'Player:Enermy')
         game_world.add_collison_pairs(Enermy[i], background, 'Enermy:First_stage')
+    for i in range(len(item)):
+        game_world.add_collison_pairs(Player, item[i], 'Player:Item')
 
 def exit():
     game_world.clear()

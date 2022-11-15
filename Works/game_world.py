@@ -11,7 +11,7 @@ def all_objects():
         for o in layer:
             yield o #yield된 함수를 호출한 곳이 for문 같은 것이면 generator
 
-def remove_object(o,depth):
+def remove_object(o):
     for layer in world:
         if o in layer:
             layer.remove(o)
