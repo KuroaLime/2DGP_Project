@@ -14,7 +14,7 @@ from school_boy import School_Boy
 from school_girl import School_Girl
 from Playable_Kyoko import Kyoko
 from destructible_object import Vending_machine
-from item import Apple
+from item import Apple, Salad, Chicken
 
 # class Grass:
 #     def __init__(self):
@@ -55,7 +55,7 @@ def enter():
     background = First_Stage(0)
     Default_deco_bar = Black_bar()
     vending_maching = Vending_machine()
-    item = [Apple()]
+    item = [Apple(),Salad(),Chicken()]
     #0 -> 배경
     #1 -> 오브젝트
     #2 -> 플레이어 상태 표기
