@@ -31,13 +31,13 @@ class Apple:
         if left_a < left_b:
             other.item[0] += 1
             game_world.remove_object(self)
-        if right_a > right_b:
+        elif right_a > right_b:
             other.item[0] += 1
             game_world.remove_object(self)
-        if top_a - 165 > top_b - 165:
+        elif top_a - 165 > top_b - 165:
             other.item[0] += 1
             game_world.remove_object(self)
-        if bottom_a < bottom_b:
+        elif bottom_a < bottom_b:
             other.item[0] += 1
             game_world.remove_object(self)
 
