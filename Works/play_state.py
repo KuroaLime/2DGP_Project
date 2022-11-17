@@ -15,6 +15,7 @@ from school_girl import School_Girl
 from Playable_Kyoko import Kyoko
 from destructible_object import Vending_machine
 from item import Apple, Salad, Chicken
+from portal import Portal
 
 # class Grass:
 #     def __init__(self):
@@ -43,10 +44,13 @@ running = None
 Default_deco_bar = None
 vending_maching = None
 item = None
+
+portal = None
 def enter():
     global Player,Enermy
     global background, running
     global Default_deco_bar,vending_maching, item
+    global portal
 
     hide_cursor()
 
@@ -56,6 +60,8 @@ def enter():
     Default_deco_bar = Black_bar()
     vending_maching = Vending_machine()
     item = [Apple(),Salad(),Chicken()]
+
+    portal = Portal()
     #0 -> 배경
     #1 -> 오브젝트
     #2 -> 플레이어 상태 표기
@@ -68,6 +74,7 @@ def enter():
     game_world.add_object(background, 0)
     game_world.add_object(Default_deco_bar, 2)
     game_world.add_object(vending_maching, 1)
+    game_world.add_object(portal, 1)
     # running = True
     game_world.add_collison_pairs(Player, background, 'Player:First_stage')
     game_world.add_collison_pairs(Player, vending_maching, 'Player:Vending_machine')
@@ -76,6 +83,7 @@ def enter():
         game_world.add_collison_pairs(Enermy[i], background, 'Enermy:First_stage')
     for i in range(len(item)):
         game_world.add_collison_pairs(Player, item[i], 'Player:Item')
+    game_world.add_collison_pairs(Player, portal, 'Player:Portal')
 
 def exit():
     game_world.clear()
