@@ -34,15 +34,15 @@ def handle_events():
         else:
             Player.handle_event(event)
 
-Player=None
-Enermy=None
-background=None
+Player = None
+Enermy = None
+background = None
 
-running=None
+running = None
 
 Default_deco_bar = None
-vending_maching= None
-item=None
+vending_maching = None
+item = None
 def enter():
     global Player,Enermy
     global background, running
@@ -51,7 +51,7 @@ def enter():
     hide_cursor()
 
     Player = Kyoko()
-    Enermy = [Cheerleader(),School_Boy(),School_Girl()]
+    Enermy = [Cheerleader(), School_Boy(), School_Girl()]
     background = First_Stage(0)
     Default_deco_bar = Black_bar()
     vending_maching = Vending_machine()
