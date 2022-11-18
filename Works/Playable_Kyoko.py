@@ -358,6 +358,13 @@ next_state = {
 class Kyoko:
     image =None
     def __init__(self):
+        self.max_hp = 500
+        self.hp = 500
+        self.exp = 0
+        self.level = 1
+        self.power = 10
+        self.luck = 5
+
         self.x, self.y = 500, 500
         self.frame = 0
         # self.last_frame=[12,    #idle                           #점프는 따로 필요 없어서 추가 안함
@@ -500,7 +507,7 @@ class Kyoko:
             print("uooooooooooooooooooooooooooo")
             if self.Enermy_attacking == False:
                 if self.event_test == ATKD:
-                    other.hp -= 10
+                    other.hp -= self.power
                     self.Enermy_attacking = True
 
 

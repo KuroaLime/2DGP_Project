@@ -31,15 +31,27 @@ class Apple:
 
         if left_a < left_b:
             other.item[0] += 1
+            other.hp += 20
+            if other.max_hp < other.hp:
+                other.hp = other.max_hp
             game_world.remove_object(self)
         elif right_a > right_b:
             other.item[0] += 1
+            other.hp += 20
+            if other.max_hp < other.hp:
+                other.hp = other.max_hp
             game_world.remove_object(self)
         elif top_a - 165 > top_b - 165:
             other.item[0] += 1
+            other.hp += 20
+            if other.max_hp < other.hp:
+                other.hp = other.max_hp
             game_world.remove_object(self)
         elif bottom_a < bottom_b:
             other.item[0] += 1
+            other.hp += 20
+            if other.max_hp < other.hp:
+                other.hp = other.max_hp
             game_world.remove_object(self)
 
 class Salad:
@@ -69,15 +81,27 @@ class Salad:
 
         if left_a < left_b:
             other.item[0] += 1
+            other.hp += 50
+            if other.max_hp < other.hp:
+                other.hp = other.max_hp
             game_world.remove_object(self)
         elif right_a > right_b:
             other.item[0] += 1
+            other.hp += 50
+            if other.max_hp < other.hp:
+                other.hp = other.max_hp
             game_world.remove_object(self)
         elif top_a - 165 > top_b - 165:
             other.item[0] += 1
+            other.hp += 50
+            if other.max_hp < other.hp:
+                other.hp = other.max_hp
             game_world.remove_object(self)
         elif bottom_a < bottom_b:
             other.item[0] += 1
+            other.hp += 50
+            if other.max_hp < other.hp:
+                other.hp = other.max_hp
             game_world.remove_object(self)
 
 class Chicken:
@@ -107,14 +131,26 @@ class Chicken:
 
         if left_a < left_b:
             other.item[0] += 1
+            other.hp += 100
+            if other.max_hp < other.hp:
+                other.hp = other.max_hp
             game_world.remove_object(self)
         elif right_a > right_b:
             other.item[0] += 1
+            other.hp += 100
+            if other.max_hp < other.hp:
+                other.hp = other.max_hp
             game_world.remove_object(self)
         elif top_a - 165 > top_b - 165:
             other.item[0] += 1
+            other.hp += 100
+            if other.max_hp < other.hp:
+                other.hp = other.max_hp
             game_world.remove_object(self)
         elif bottom_a < bottom_b:
             other.item[0] += 1
+            other.hp += 100
+            if other.max_hp < other.hp:
+                other.hp = other.max_hp
             game_world.remove_object(self)
 
