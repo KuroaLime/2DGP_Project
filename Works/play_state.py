@@ -46,6 +46,7 @@ vending_maching = None
 item = None
 
 portal = None
+
 def enter():
     global Player,Enermy
     global background, running
@@ -62,6 +63,7 @@ def enter():
     item = [Apple(),Salad(),Chicken()]
 
     portal = Portal()
+
     #0 -> 배경
     #1 -> 오브젝트
     #2 -> 플레이어 상태 표기
@@ -107,6 +109,11 @@ def update():
                 # print('COLLISON : ', group)
                 a.handle_collision(b, group)
                 b.handle_collision(a, group)
+
+    # if Player.next_stage == True:
+    #     for i in range(len(Enermy)):
+    #         game_world.remove_object(Enermy[i])
+
 def draw():
     clear_canvas()
     draw_world()

@@ -24,4 +24,4 @@ class Portal:
         left_b, bottom_b, right_b, top_b = self.get_bb()
         print('collision Portal!!!!!!')
         if left_a > left_b and right_a < right_b and top_a > top_b:
-            # other.portal = True
+            other.portalState = True

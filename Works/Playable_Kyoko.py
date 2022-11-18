@@ -119,24 +119,25 @@ class RUN_lr:
         self.face_dir = self.dir_lr
     @staticmethod
     def do(self):
-        self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
-        if self.DashState:
-            self.x += self.dir_lr * (DASH_SPEED_PPS) * game_framework.frame_time
-        else:
-            self.x += self.dir_lr * (RUN_SPEED_PPS) * game_framework.frame_time
-        self.x = clamp(0, self.x, canvas_size.WID)
+        if self.attacking == False:
+            self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
+            if self.DashState:
+                self.x += self.dir_lr * (DASH_SPEED_PPS) * game_framework.frame_time
+            else:
+                self.x += self.dir_lr * (RUN_SPEED_PPS) * game_framework.frame_time
+            self.x = clamp(0, self.x, canvas_size.WID)
 
-        if self.JumpState:
-            self.JUMP()
-            self.y += self.JumpHeight
-            self.all_jumpHeight += self.JumpHeight
-        if self.Jump_V<-1 * JUMP_VELOCITY:
-            self.JumpState =False
-            self.JumpHeight = 0.0
-            self.Jump_V = JUMP_VELOCITY
-            self.all_jumpHeight = 0
-        if self.DashState:
-            self.Dash()
+            if self.JumpState:
+                self.JUMP()
+                self.y += self.JumpHeight
+                self.all_jumpHeight += self.JumpHeight
+            if self.Jump_V<-1 * JUMP_VELOCITY:
+                self.JumpState =False
+                self.JumpHeight = 0.0
+                self.Jump_V = JUMP_VELOCITY
+                self.all_jumpHeight = 0
+            if self.DashState:
+                self.Dash()
 
 
 
@@ -170,21 +171,22 @@ class RUN_ud:
         print('EXIT RUN_ud')
     @staticmethod
     def do(self):
-        self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
-        if self.DashState:
-            self.y += self.dir_ud * DASH_SPEED_PPS * game_framework.frame_time
-        else:
-            self.y += self.dir_ud  * RUN_SPEED_PPS * game_framework.frame_time
-        self.y = clamp(0, self.y, canvas_size.HEI)
-        if self.JumpState:
-            self.JUMP()
-            self.y += self.JumpHeight
-            self.all_jumpHeight += self.JumpHeight
-        if self.Jump_V<-1 * JUMP_VELOCITY:
-            self.JumpState =False
-            self.JumpHeight = 0.0
-            self.Jump_V = JUMP_VELOCITY
-            self.all_jumpHeight = 0
+        if self.attacking == False:
+            self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
+            if self.DashState:
+                self.y += self.dir_ud * DASH_SPEED_PPS * game_framework.frame_time
+            else:
+                self.y += self.dir_ud  * RUN_SPEED_PPS * game_framework.frame_time
+            self.y = clamp(0, self.y, canvas_size.HEI)
+            if self.JumpState:
+                self.JUMP()
+                self.y += self.JumpHeight
+                self.all_jumpHeight += self.JumpHeight
+            if self.Jump_V<-1 * JUMP_VELOCITY:
+                self.JumpState =False
+                self.JumpHeight = 0.0
+                self.Jump_V = JUMP_VELOCITY
+                self.all_jumpHeight = 0
     @staticmethod
     def draw(self):
         if self.JumpState:
@@ -229,26 +231,27 @@ class RUN_diag: #대각선 이동
             self.dir_lr = 0
     @staticmethod
     def do(self):
-        self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
-        if self.DashState:
-            self.x += self.dir_lr * (DASH_SPEED_PPS) * game_framework.frame_time
-            self.y += self.dir_ud * (DASH_SPEED_PPS) * game_framework.frame_time
-        else:
-            self.x += self.dir_lr * RUN_SPEED_PPS * game_framework.frame_time
-            self.y += self.dir_ud * RUN_SPEED_PPS * game_framework.frame_time
-        self.y = clamp(0, self.y, canvas_size.HEI)
-        self.x = clamp(0, self.x, canvas_size.WID)
+        if self.attacking == False:
+            self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
+            if self.DashState:
+                self.x += self.dir_lr * (DASH_SPEED_PPS) * game_framework.frame_time
+                self.y += self.dir_ud * (DASH_SPEED_PPS) * game_framework.frame_time
+            else:
+                self.x += self.dir_lr * RUN_SPEED_PPS * game_framework.frame_time
+                self.y += self.dir_ud * RUN_SPEED_PPS * game_framework.frame_time
+            self.y = clamp(0, self.y, canvas_size.HEI)
+            self.x = clamp(0, self.x, canvas_size.WID)
 
-        if self.JumpState:
-            self.JUMP()
-            self.y += self.JumpHeight
-            self.all_jumpHeight += self.JumpHeight
-        if self.Jump_V<-1 * JUMP_VELOCITY:
-            self.JumpState =False
-            self.JumpHeight = 0.0
-            self.Jump_V = JUMP_VELOCITY
-            self.all_jumpHeight = 0
-            self.all_jumpHeight += self.JumpHeight
+            if self.JumpState:
+                self.JUMP()
+                self.y += self.JumpHeight
+                self.all_jumpHeight += self.JumpHeight
+            if self.Jump_V<-1 * JUMP_VELOCITY:
+                self.JumpState =False
+                self.JumpHeight = 0.0
+                self.Jump_V = JUMP_VELOCITY
+                self.all_jumpHeight = 0
+                self.all_jumpHeight += self.JumpHeight
     @staticmethod
     def draw(self):
         if self.JumpState:
@@ -287,6 +290,7 @@ class Normal_attack:
     @staticmethod
     def enter(self, event):
         print('ENTER Normal_attack')
+        self.portalTimer = 0
         if self.attacking == False:
             self.frame = 0
             self.attacking = True
@@ -314,6 +318,11 @@ class Normal_attack:
             self.last_attack_frame = self.frame
         else:
             self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
+        if self.portalState == True:
+            if self.portalTimer <=3:
+                self.portalTimer += game_framework.frame_time
+            else:
+                self.next_stage = True
     @staticmethod
     def draw(self):
         if self.attacking == True:
@@ -381,6 +390,10 @@ class Kyoko:
         self.event_test = None
 
         self.item = [0, 0, 0]
+
+        self.portalState = False
+
+        self.next_stage = False
     def update(self):
         self.cur_state.do(self)
 
