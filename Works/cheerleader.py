@@ -2,6 +2,8 @@ from pico2d import *
 import game_framework
 import play_state
 import random
+import game_world
+
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 10.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -16,6 +18,7 @@ FRAMES_PER_ACTION_RUN = 12
 class Cheerleader:
     image=None
     def __init__(self):
+        self.hp = 20
         self.x, self.y, self.t= random.randint(400,500), random.randint(200,400),0.0
         self.sx,self.sy=self.x, self.y
         self.ax,self.ay = play_state.Player.x,play_state.Player.y
@@ -39,6 +42,8 @@ class Cheerleader:
             self.sx, self.sy = self.x, self.y
             self.ax, self.ay = play_state.Player.x, play_state.Player.y
     def update(self):
+        if self.hp <= 0:
+            game_world.remove_object(self)
         self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
         #self.t += 0.0005
         if self.x != self.ax:

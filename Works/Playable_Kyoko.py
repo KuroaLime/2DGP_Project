@@ -484,7 +484,6 @@ class Kyoko:
             # print('event_type : ',event.type,', event_key : ',event.key)
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
-
     def get_bb(self):   #적, 자판기등의 오브젝트와의 충돌범위
         return self.x - 45, self.y - 95, self.x + 45, self.y + 85
     def get_TT(self):   #스테이지와의 충돌
@@ -494,6 +493,8 @@ class Kyoko:
         if group == 'Player:Vending_machine':
             if self.event_test == ATKD:
                 other.state = 1
+        if self.cur_state == Normal_attack:
+            other.hp -= 10
 
     def JUMP(self):
             # if self.Jump_V > 0:
