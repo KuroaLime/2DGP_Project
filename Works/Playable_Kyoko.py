@@ -297,10 +297,11 @@ class Normal_attack:
     @staticmethod
     def exit(self, event):
         print('EXIT Normal_attack')
+        self.Enermy_attacking = False
     @staticmethod
     def do(self):
         if self.attacking == True:
-            print('attack_turn : ', self.attack_turn)
+            # print('attack_turn : ', self.attack_turn)
             if self.attack_turn == 0:
                 self.frame = (self.frame + FRAMES_PER_ACTION_NORMAL_ATTACK00 * ACTION_PER_TIME * game_framework.frame_time) % 6
             elif self.attack_turn == 1:
@@ -308,7 +309,7 @@ class Normal_attack:
             elif self.attack_turn == 2:
                 self.frame = (self.frame + FRAMES_PER_ACTION_NORMAL_ATTACK02 * ACTION_PER_TIME * game_framework.frame_time) % 12
 
-            print('frame : ', self.frame, 'last_attack_frame : ',self.last_attack_frame)
+            # print('frame : ', self.frame, 'last_attack_frame : ',self.last_attack_frame)
             if self.frame < self.last_attack_frame:
                 self.attack_turn += 1
                 if self.attack_turn == 3:
@@ -394,6 +395,8 @@ class Kyoko:
         self.portalState = False
 
         self.next_stage = False
+
+        self.Enermy_attacking = False
     def update(self):
         self.cur_state.do(self)
 
@@ -493,8 +496,13 @@ class Kyoko:
         if group == 'Player:Vending_machine':
             if self.event_test == ATKD:
                 other.state = 1
-        if self.cur_state == Normal_attack:
-            other.hp -= 10
+        if group == 'Player:Enermy':
+            print("uooooooooooooooooooooooooooo")
+            if self.Enermy_attacking == False:
+                if self.event_test == ATKD:
+                    other.hp -= 10
+                    self.Enermy_attacking = True
+
 
     def JUMP(self):
             # if self.Jump_V > 0:

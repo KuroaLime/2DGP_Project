@@ -96,13 +96,13 @@ class Cheerleader:
     def handle_collision(self, other, group):
         left_a, bottom_a, right_a, top_a = other.get_bb()
         left_b, bottom_b, right_b, top_b = self.get_bb()
-        if left_a < left_b:
-            self.x += 1
-        if right_a > right_b:
-            self.x += -1
-        if top_a-165 > top_b-165:
-            self.y += -1
-        if bottom_a < bottom_b:
-            self.y += 1
+        # if left_a < left_b:
+        #     self.x += 1
+        # if right_a > right_b:
+        #     self.x += -1
+        # if top_a-165 > top_b-165:
+        #     self.y += -1
+        # if bottom_a < bottom_b:
+        #     self.y += 1
 
 

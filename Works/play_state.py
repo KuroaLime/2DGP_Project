@@ -103,6 +103,7 @@ def update():
         elif group == 'Player:Enermy':
             if moving_obj_collide(a, b):
                 # print('COLLISON : ', group)
+                a.handle_collision(b,group)
                 b.handle_collision(a, group)
         else:
             if collide(a, b):
