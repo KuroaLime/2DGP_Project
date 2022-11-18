@@ -500,9 +500,12 @@ class Kyoko:
         return self.x - 45, (self.y-self.all_jumpHeight) - 95, self.x + 45, (self.y -self.all_jumpHeight) -80
 
     def handle_collision(self, other, group):
-        if group == 'Player:Vending_machine':
-            if self.event_test == ATKD:
-                other.state = 1
+        if group == 'Player:Destructible_object':
+            if self.event_test == ATKD and other.under_attack == False:
+                other.state += 1
+                other.under_attack = True
+            elif self.event_test != ATKD:
+                other.under_attack = False
         if group == 'Player:Enermy':
             print("uooooooooooooooooooooooooooo")
             if self.Enermy_attacking == False:

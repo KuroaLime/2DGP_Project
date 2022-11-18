@@ -22,6 +22,6 @@ class Portal:
         # print('Boy and Player collsion')
         left_a, bottom_a, right_a, top_a = other.get_bb()
         left_b, bottom_b, right_b, top_b = self.get_bb()
-        print('collision Portal!!!!!!')
+        # print('collision Portal!!!!!!')
         if left_a > left_b and right_a < right_b and top_a > top_b:
             other.portalState = True

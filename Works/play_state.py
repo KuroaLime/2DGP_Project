@@ -13,7 +13,7 @@ from cheerleader import Cheerleader
 from school_boy import School_Boy
 from school_girl import School_Girl
 from Playable_Kyoko import Kyoko
-from destructible_object import Vending_machine
+from destructible_object import Vending_machine, Gold_statue
 from item import Apple, Salad, Chicken
 from portal import Portal
 
@@ -42,7 +42,7 @@ background = None
 running = None
 
 Default_deco_bar = None
-vending_maching = None
+Destructible_object = None
 item = None
 
 portal = None
@@ -50,7 +50,7 @@ portal = None
 def enter():
     global Player,Enermy
     global background, running
-    global Default_deco_bar,vending_maching, item
+    global Default_deco_bar,Destructible_object, item
     global portal
 
     hide_cursor()
@@ -59,8 +59,8 @@ def enter():
     Enermy = [Cheerleader(), School_Boy(), School_Girl()]
     background = First_Stage(0)
     Default_deco_bar = Black_bar()
-    vending_maching = Vending_machine()
-    item = [Apple(),Salad(),Chicken()]
+    Destructible_object = [Vending_machine(), Gold_statue()]
+    item = [Apple(), Salad(), Chicken()]
 
     portal = Portal()
 
@@ -69,17 +69,18 @@ def enter():
     #2 -> 플레이어 상태 표기
     #3 -> 플레이어
     game_world.add_object(Player, 3)
+    game_world.add_object(background, 0)
+    game_world.add_object(portal, 1)
+    game_world.add_object(Default_deco_bar, 2)
     for i in range(len(Enermy)):
         game_world.add_object(Enermy[i], 3)
     for i in range(len(item)):
         game_world.add_object(item[i],1)
-    game_world.add_object(background, 0)
-    game_world.add_object(Default_deco_bar, 2)
-    game_world.add_object(vending_maching, 1)
-    game_world.add_object(portal, 1)
+    for i in range(len(Destructible_object)):
+        game_world.add_object(Destructible_object[i], 1)
+        game_world.add_collison_pairs(Player, Destructible_object[i], 'Player:Destructible_object')
     # running = True
     game_world.add_collison_pairs(Player, background, 'Player:First_stage')
-    game_world.add_collison_pairs(Player, vending_maching, 'Player:Vending_machine')
     for i in range(len(Enermy)):
         game_world.add_collison_pairs(Player, Enermy[i], 'Player:Enermy')
         game_world.add_collison_pairs(Enermy[i], background, 'Enermy:First_stage')
