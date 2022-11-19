@@ -10,8 +10,8 @@ from stage import *
 import Menu_state
 #적 임포트
 from cheerleader import Cheerleader
-from school_boy import School_Boy
-from school_girl import School_Girl
+from school_boy import School_boy
+from school_girl import School_girl
 from Playable_Kyoko import Kyoko
 from destructible_object import Vending_machine, Gold_statue
 from item import Apple, Salad, Chicken
@@ -56,7 +56,7 @@ def enter():
     hide_cursor()
 
     Player = Kyoko()
-    Enermy = [Cheerleader(), School_Boy(), School_Girl()]
+    Enermy = [Cheerleader(), School_boy(), School_girl()]
     background = First_Stage(0)
     Default_deco_bar = Black_bar()
     Destructible_object = [Vending_machine(), Gold_statue()]
