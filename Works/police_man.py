@@ -17,16 +17,16 @@ FRAMES_PER_ACTION_IDLE = 12
 FRAMES_PER_ACTION_RUN = 12
 
 animation_names = ['Idle', 'Walk']
-class School_girl:
+class Police_man:
     images=None
     def load_images(self):
-        if School_girl.images == None:
-            School_girl.images = {}
+        if Police_man.images == None:
+            Police_man.images = {}
             for name in animation_names:
-                School_girl.images[name] = [load_image("./Resource/classification/enermy/school_girl/Occupied/"+ name + " (%d)" % i + ".png") for i in range(1, 13)]
+                Police_man.images[name] = [load_image("./Resource/classification/enermy/police_man/Occupied/"+ name + " (%d)" % i + ".png") for i in range(1, 13)]
 
     def prepare_patrol_points(self):
-        positions = [(1100, 1050), (1118, 750), (1050, 530), (575, 220), (235, 33), (575,220), (1050, 530), (1118,750)]
+        positions = [(900, 850), (1118, 750), (1050, 530), (575, 220), (235, 33), (575,220), (1050, 530), (1118,750)]
         self.patrol_points = []
         for p in positions:
             self.patrol_points.append((p[0], 1024-p[1]))
@@ -128,14 +128,14 @@ class School_girl:
 
         if math.cos(self.dir) < 0:
             if self.speed == 0:
-                School_girl.images['Idle'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 190, 200)
+                Police_man.images['Idle'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 190, 200)
             else:
-                School_girl.images['Walk'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 190, 200)
+                Police_man.images['Walk'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 190, 200)
         else:
             if self.speed == 0:
-                School_girl.images['Idle'][int(self.frame)].draw(self.x, self.y, 190, 200)
+                Police_man.images['Idle'][int(self.frame)].draw(self.x, self.y, 190, 200)
             else:
-                School_girl.images['Walk'][int(self.frame)].draw(self.x, self.y, 190, 200)
+                Police_man.images['Walk'][int(self.frame)].draw(self.x, self.y, 190, 200)
     def get_bb(self):   #적, 자판기등의 오브젝트와의 충돌범위
         return self.x - 60, self.y - 95, self.x + 60, self.y + 85
     def get_TT(self):   #스테이지와의 충돌

@@ -12,7 +12,14 @@ import Menu_state
 from cheerleader import Cheerleader
 from school_boy import School_boy
 from school_girl import School_girl
+from cyborg import Cyborg
+from police_man import Police_man
+
 from Playable_Kyoko import Kyoko
+
+from misuzu import Misuzu
+from hibari import Hibari
+
 from destructible_object import Vending_machine, Gold_statue
 from item import Apple, Salad, Chicken
 from portal import Portal
@@ -37,6 +44,8 @@ def handle_events():
 
 Player = None
 Enermy = None
+Boss = None
+
 background = None
 
 running = None
@@ -48,7 +57,7 @@ item = None
 portal = None
 
 def enter():
-    global Player,Enermy
+    global Player,Enermy, Boss
     global background, running
     global Default_deco_bar,Destructible_object, item
     global portal
@@ -56,7 +65,9 @@ def enter():
     hide_cursor()
 
     Player = Kyoko()
-    Enermy = [Cheerleader(), School_boy(), School_girl()]
+    Enermy = [Cheerleader(), School_boy(), School_girl(), Cyborg(), Police_man()]
+    Boss = [Misuzu(),Hibari()]
+
     background = First_Stage(0)
     Default_deco_bar = Black_bar()
     Destructible_object = [Vending_machine(), Gold_statue()]
@@ -74,16 +85,21 @@ def enter():
     game_world.add_object(Default_deco_bar, 2)
     for i in range(len(Enermy)):
         game_world.add_object(Enermy[i], 3)
+    for i in range(len(Boss)):
+        game_world.add_object(Boss[i], 3)
     for i in range(len(item)):
         game_world.add_object(item[i],1)
     for i in range(len(Destructible_object)):
         game_world.add_object(Destructible_object[i], 1)
         game_world.add_collison_pairs(Player, Destructible_object[i], 'Player:Destructible_object')
-    # running = True
+
     game_world.add_collison_pairs(Player, background, 'Player:First_stage')
     for i in range(len(Enermy)):
         game_world.add_collison_pairs(Player, Enermy[i], 'Player:Enermy')
         game_world.add_collison_pairs(Enermy[i], background, 'Enermy:First_stage')
+    for i in range(len(Boss)):
+        game_world.add_collison_pairs(Player, Boss[i], 'Player:Boss')
+        game_world.add_collison_pairs(Boss[i], background, 'Boss:First_stage')
     for i in range(len(item)):
         game_world.add_collison_pairs(Player, item[i], 'Player:Item')
     game_world.add_collison_pairs(Player, portal, 'Player:Portal')
@@ -97,11 +113,11 @@ def update():
         game_object.update()
     for a, b, group in game_world.all_collision_pairs():
 
-        if group == 'Player:First_stage' or group == 'Enermy:First_stage':
+        if group == 'Player:First_stage' or group == 'Enermy:First_stage' or group == 'Boss:First_stage':
             if stage_collide(a, b):
                 # print('COLLISON : ', group)
                 b.handle_collision(a, group)
-        elif group == 'Player:Enermy':
+        elif group == 'Player:Enermy' or group == 'Plyaer:Boss':
             if moving_obj_collide(a, b):
                 # print('COLLISON : ', group)
                 a.handle_collision(b,group)

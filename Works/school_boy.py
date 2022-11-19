@@ -26,7 +26,7 @@ class School_boy:
                 School_boy.images[name] = [load_image("./Resource/classification/enermy/school_boy/Occupied/"+ name + " (%d)" % i + ".png") for i in range(1, 13)]
 
     def prepare_patrol_points(self):
-        positions = [(43, 750), (1118, 750), (1050, 530), (575, 220), (235, 33), (575,220), (1050, 530), (1118,750)]
+        positions = [(1000, 950), (1118, 750), (1050, 530), (575, 220), (235, 33), (575,220), (1050, 530), (1118,750)]
         self.patrol_points = []
         for p in positions:
             self.patrol_points.append((p[0], 1024-p[1]))

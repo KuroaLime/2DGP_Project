@@ -26,7 +26,7 @@ class Cheerleader:
                 Cheerleader.images[name] = [load_image("./Resource/classification/enermy/cheerleader/Occupied/"+ name + " (%d)" % i + ".png") for i in range(1, 13)]
 
     def prepare_patrol_points(self):
-        positions = [(43, 750), (1118, 750), (1050, 530), (575, 220), (235, 33), (575,220), (1050, 530), (1118,750)]
+        positions = [(500, 450), (1118, 750), (1050, 530), (575, 220), (235, 33), (575,220), (1050, 530), (1118,750)]
         self.patrol_points = []
         for p in positions:
             self.patrol_points.append((p[0], 1024-p[1]))
