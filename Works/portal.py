@@ -5,7 +5,7 @@ import random
 
 class Portal:
     def __init__(self):
-        self.x, self.y = 800, 100
+        self.x, self.y = 1920, 700
 
     def update(self):
         pass
@@ -13,7 +13,8 @@ class Portal:
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
-        return self.x - 200, self.y - 170, self.x + 200, self.y + 240
+        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        return sx - 200, sy - 170, sx + 200, sy + 240
 
     def handle_collision(self, other, group):
         # print('Boy and Player collsion')

@@ -87,17 +87,20 @@ class IDLE:
             self.all_jumpHeight = 0
     @staticmethod
     def draw(self):
+        sy = self.y - server.background.window_bottom
+        sx = self.x - server.background.window_left
+
         if self.JumpState:
             if self.face_dir == 1:
-                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', self.x, self.y,140,200)
+                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', sx, sy,140,200)
             else:
-                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', self.x, self.y,140,200)
+                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', sx, sy,140,200)
 
         else:
             if self.face_dir == 1:
-                self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, '', self.x, self.y,140,200)
+                self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, '', sx, sy,140,200)
             else:
-                self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', self.x, self.y,140,200)
+                self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', sx, sy,140,200)
 
 
 
@@ -126,7 +129,7 @@ class RUN_lr:
                 self.x += self.dir_lr * (DASH_SPEED_PPS) * game_framework.frame_time
             else:
                 self.x += self.dir_lr * (RUN_SPEED_PPS) * game_framework.frame_time
-            self.x = clamp(50, self.x, server.background.WEI - 50)
+            self.x = clamp(50, self.x, server.background.WID - 50)
 
             if self.JumpState:
                 self.JUMP()
@@ -144,19 +147,20 @@ class RUN_lr:
 
     @staticmethod
     def draw(self):
+        sy = self.y - server.background.window_bottom
         sx = self.x - server.background.window_left
 
         if self.JumpState:
             if self.face_dir == 1:
-                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', sx, self.y,140,200)
+                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', sx, sy,140,200)
             else:
-                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', sx, self.y,140,200)
+                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', sx, sy,140,200)
 
         else:
             if self.dir_lr == 1:
-                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', sx, self.y,140,200)
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', sx, sy,140,200)
             else:
-                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', sx, self.y,140,200)
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', sx, sy,140,200)
 class RUN_ud:
     @staticmethod
     def enter(self, event):
@@ -179,7 +183,7 @@ class RUN_ud:
             if self.DashState:
                 self.y += self.dir_ud * DASH_SPEED_PPS * game_framework.frame_time
             else:
-                self.y += self.dir_ud  * RUN_SPEED_PPS * game_framework.frame_time
+                self.y += self.dir_ud * RUN_SPEED_PPS * game_framework.frame_time
             self.y = clamp(50, self.y, server.background.HEI - 50)
             if self.JumpState:
                 self.JUMP()
@@ -193,18 +197,19 @@ class RUN_ud:
     @staticmethod
     def draw(self):
         sy = self.y - server.background.window_bottom
+        sx = self.x - server.background.window_left
 
         if self.JumpState:
             if self.face_dir == 1:
-                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', self.x, sy,140,200)
+                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', sx, sy,140,200)
             else:
-                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', self.x, sy,140,200)
+                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', sx, sy,140,200)
 
         else:
             if self.face_dir == 1:
-                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', self.x, sy,140,200)
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', sx, sy,140,200)
             else:
-                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', self.x, sy,140,200)
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', sx, sy,140,200)
 
 class RUN_diag: #대각선 이동
     @staticmethod
@@ -244,8 +249,8 @@ class RUN_diag: #대각선 이동
             else:
                 self.x += self.dir_lr * RUN_SPEED_PPS * game_framework.frame_time
                 self.y += self.dir_ud * RUN_SPEED_PPS * game_framework.frame_time
-            self.y = clamp(0, self.y, canvas_size.HEI)
-            self.x = clamp(0, self.x, canvas_size.WID)
+            self.x = clamp(50, self.x, server.background.WID - 50)
+            self.y = clamp(50, self.y, server.background.HEI - 50)
 
             if self.JumpState:
                 self.JUMP()
@@ -259,17 +264,19 @@ class RUN_diag: #대각선 이동
                 self.all_jumpHeight += self.JumpHeight
     @staticmethod
     def draw(self):
+        sy = self.y - server.background.window_bottom
+        sx = self.x - server.background.window_left
         if self.JumpState:
             if self.face_dir == 1:
-                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', self.x, self.y,140,200)
+                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', sx, sy,140,200)
             else:
-                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', self.x, self.y,140,200)
+                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', sx, sy,140,200)
 
         else:
             if self.dir_lr == 1:
-                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70, 0, '', self.x, self.y, 140, 200)
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70, 0, '', sx, sy, 140, 200)
             else:
-                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70, 0, 'h', self.x, self.y, 140, 200)
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70, 0, 'h', sx, sy, 140, 200)
 class SLEEP:
     @staticmethod
     def enter(self, event):
@@ -331,27 +338,29 @@ class Normal_attack:
                 self.next_stage = True
     @staticmethod
     def draw(self):
+        sy = self.y - server.background.window_bottom
+        sx = self.x - server.background.window_left
         if self.attacking == True:
             if self.attack_turn == 0:
                 if self.face_dir == 1:
-                    self.image.clip_composite_draw(int(self.frame) * 65, 484, 60, 67, 0, '', self.x, self.y, 180, 200)
+                    self.image.clip_composite_draw(int(self.frame) * 65, 484, 60, 67, 0, '', sx, sy, 180, 200)
                 else:
-                    self.image.clip_composite_draw(int(self.frame) * 65, 484, 60, 67, 0, 'h', self.x, self.y, 180, 200)
+                    self.image.clip_composite_draw(int(self.frame) * 65, 484, 60, 67, 0, 'h', sx, sy, 180, 200)
             elif self.attack_turn == 1:
                 if self.face_dir == 1:
-                    self.image.clip_composite_draw(int(self.frame) * 69, 549, 68, 69, 0, '', self.x, self.y, 180, 200)
+                    self.image.clip_composite_draw(int(self.frame) * 69, 549, 68, 69, 0, '', sx, sy, 180, 200)
                 else:
-                    self.image.clip_composite_draw(int(self.frame) * 69, 549, 68, 69, 0, 'h', self.x, self.y, 180, 200)
+                    self.image.clip_composite_draw(int(self.frame) * 69, 549, 68, 69, 0, 'h', sx, sy, 180, 200)
             elif self.attack_turn == 2:
                 if self.face_dir == 1:
-                    self.image.clip_composite_draw(int(self.frame) * 84, 620, 83, 72, 0, '', self.x, self.y, 180, 200)
+                    self.image.clip_composite_draw(int(self.frame) * 84, 620, 83, 72, 0, '', sx, sy, 180, 200)
                 else:
-                    self.image.clip_composite_draw(int(self.frame) * 84, 620, 83, 72, 0, 'h', self.x, self.y, 180, 200)
+                    self.image.clip_composite_draw(int(self.frame) * 84, 620, 83, 72, 0, 'h', sx, sy, 180, 200)
         else:
             if self.face_dir == 1:
-                self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, '', self.x, self.y, 140, 200)
+                self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, '', sx, sy, 140, 200)
             else:
-                self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', self.x, self.y, 140, 200)
+                self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', sx, sy, 140, 200)
 next_state = {
     IDLE: {RU: IDLE, LU: IDLE, RD: RUN_lr, LD: RUN_lr, UU: IDLE, DU: IDLE, UD: RUN_ud, DD: RUN_ud,JUMPD: IDLE, TIMER: SLEEP,ATKD:Normal_attack,ATK_END:IDLE},
     RUN_lr: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE, UU: RUN_diag, DU: RUN_diag, UD: RUN_diag, DD: RUN_diag,JUMPD: RUN_lr,ATKD:Normal_attack,ATK_END:IDLE},
@@ -443,9 +452,13 @@ class Kyoko:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
     def get_bb(self):   #적, 자판기등의 오브젝트와의 충돌범위
-        return self.x - 45, self.y - 95, self.x + 45, self.y + 85
+        sy = self.y - server.background.window_bottom
+        sx = self.x - server.background.window_left
+        return sx - 45, sy - 95, sx + 45, sy + 85
     def get_TT(self):   #스테이지와의 충돌
-        return self.x - 45, (self.y-self.all_jumpHeight) - 95, self.x + 45, (self.y -self.all_jumpHeight) -80
+        sy = self.y - server.background.window_bottom
+        sx = self.x - server.background.window_left
+        return sx - 45, (sy-self.all_jumpHeight) - 95, sx + 45, (sy -self.all_jumpHeight) -80
 
     def handle_collision(self, other, group):
         if group == 'Player:Destructible_object':

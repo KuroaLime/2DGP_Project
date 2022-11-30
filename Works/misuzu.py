@@ -126,21 +126,28 @@ class Misuzu:
     def draw(self):
         draw_rectangle(*self.get_bb())
         draw_rectangle(*self.get_TT())
-
+        sy = self.y - server.background.window_bottom
+        sx = self.x - server.background.window_left
         if math.cos(self.dir) < 0:
             if self.speed == 0:
-                Misuzu.images['Idle'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 190, 200)
+                Misuzu.images['Idle'][int(self.frame)].composite_draw(0, 'h', sx, sy, 190, 200)
             else:
-                Misuzu.images['Walk'][int(self.frame)].composite_draw(0, 'h', self.x, self.y, 190, 200)
+                Misuzu.images['Walk'][int(self.frame)].composite_draw(0, 'h', sx, sy, 190, 200)
         else:
             if self.speed == 0:
-                Misuzu.images['Idle'][int(self.frame)].draw(self.x, self.y, 190, 200)
+                Misuzu.images['Idle'][int(self.frame)].draw(sx, sy, 190, 200)
             else:
-                Misuzu.images['Walk'][int(self.frame)].draw(self.x, self.y, 190, 200)
-    def get_bb(self):   #적, 자판기등의 오브젝트와의 충돌범위
-        return self.x - 60, self.y - 95, self.x + 60, self.y + 85
-    def get_TT(self):   #스테이지와의 충돌
-        return self.x - 60, self.y - 95, self.x + 60, self.y -80
+                Misuzu.images['Walk'][int(self.frame)].draw(sx, sy, 190, 200)
+
+    def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
+        sy = self.y - server.background.window_bottom
+        sx = self.x - server.background.window_left
+        return sx - 60, sy - 95, sx + 60, sy + 85
+
+    def get_TT(self):  # 스테이지와의 충돌
+        sy = self.y - server.background.window_bottom
+        sx = self.x - server.background.window_left
+        return sx - 60, sy - 95, sx + 60, sy - 80
     def handle_collision(self, other, group):
         left_a, bottom_a, right_a, top_a = other.get_bb()
         left_b, bottom_b, right_b, top_b = self.get_bb()

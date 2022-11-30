@@ -21,7 +21,8 @@ class Apple:
         sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
         self.image.clip_composite_draw(59, 54, 14, 18, 0, '', sx, sy, 30, 30)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
-        return self.x - 20, self.y - 20, self.x +20, self.y + 20
+        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        return sx - 20, sy - 20, sx +20, sy + 20
 
 
     def handle_collision(self, other, group):
@@ -71,7 +72,8 @@ class Salad:
         sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
         self.image.clip_composite_draw(55, 54, 20, 14, 0, '', sx, sy, 30, 30)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
-        return self.x - 20, self.y - 20, self.x +20, self.y + 20
+        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        return sx - 20, sy - 20, sx +20, sy + 20
 
 
     def handle_collision(self, other, group):
@@ -121,7 +123,8 @@ class Chicken:
         sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
         self.image.clip_composite_draw(44, 51, 42, 21, 0, '', sx, sy, 30, 30)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
-        return self.x - 20, self.y - 20, self.x +20, self.y + 20
+        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        return sx - 20, sy - 20, sx +20, sy + 20
 
 
     def handle_collision(self, other, group):
