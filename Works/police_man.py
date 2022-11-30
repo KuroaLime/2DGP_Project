@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import play_state
+import server
 import random
 import game_world
 from BehaviorTree import BehaviorTree, SelectorNode, SequenceNode, LeafNode
@@ -65,7 +65,7 @@ class Police_man:
             return BehaviorTree.RUNNING
 
     def find_player(self):
-        distance2 = (play_state.Player.x - self.x)**2 + (play_state.Player.y - self.y)**2
+        distance2 = (server.Player.x - self.x)**2 + (server.Player.y - self.y)**2
         if distance2 <= (PIXEL_PER_METER*10)**2:
             return BehaviorTree.SUCCESS
         else:
@@ -74,7 +74,7 @@ class Police_man:
 
     def move_to_player(self):
         self.speed = RUN_SPEED_PPS
-        self.dir = math.atan2(play_state.Player.y - self.y, play_state.Player.x - self.x)
+        self.dir = math.atan2(server.Player.y - self.y, server.Player.x - self.x)
         return BehaviorTree.SUCCESS
 
     def get_next_position(self):
@@ -85,7 +85,7 @@ class Police_man:
 
     def move_to_target(self):
         self.speed = RUN_SPEED_PPS
-        distance2 = (play_state.Player.x - self.x)**2 + (play_state.Player.y - self.y)**2
+        distance2 = (server.Player.x - self.x)**2 + (server.Player.y - self.y)**2
         if distance2 <= PIXEL_PER_METER**2:
             return BehaviorTree.SUCCESS
         else:

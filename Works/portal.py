@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import play_state
+import server
 import random
 
 class Portal:
@@ -10,9 +10,6 @@ class Portal:
     def update(self):
         pass
     def draw(self):
-        self.x = 610 + play_state.background.WID
-        self.y = 70 + play_state.background.HEI
-
         draw_rectangle(*self.get_bb())
 
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위

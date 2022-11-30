@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import play_state
+import server
 import random
 import Playable_Kyoko
 import game_world
@@ -15,11 +15,11 @@ class Apple:
             Apple.image = load_image('Resource/Food/apple.png')
 
     def update(self):
-        self.x = self.rand_x+play_state.background.WID
-        self.y = self.rand_y+play_state.background.HEI
+        pass
     def draw(self):
         draw_rectangle(*self.get_bb())
-        self.image.clip_composite_draw(59, 54, 14, 18, 0, '', self.x, self.y, 30, 30)
+        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        self.image.clip_composite_draw(59, 54, 14, 18, 0, '', sx, sy, 30, 30)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
         return self.x - 20, self.y - 20, self.x +20, self.y + 20
 
@@ -65,11 +65,11 @@ class Salad:
             Salad.image = load_image('Resource/Food/salad.png')
 
     def update(self):
-        self.x = self.rand_x+play_state.background.WID
-        self.y = self.rand_y+play_state.background.HEI
+        pass
     def draw(self):
         draw_rectangle(*self.get_bb())
-        self.image.clip_composite_draw(55, 54, 20, 14, 0, '', self.x, self.y, 30, 30)
+        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        self.image.clip_composite_draw(55, 54, 20, 14, 0, '', sx, sy, 30, 30)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
         return self.x - 20, self.y - 20, self.x +20, self.y + 20
 
@@ -115,11 +115,11 @@ class Chicken:
             Chicken.image = load_image('Resource/Food/chicken.png')
 
     def update(self):
-        self.x = self.rand_x+play_state.background.WID
-        self.y = self.rand_y+play_state.background.HEI
+        pass
     def draw(self):
         draw_rectangle(*self.get_bb())
-        self.image.clip_composite_draw(44, 51, 42, 21, 0, '', self.x, self.y, 30, 30)
+        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        self.image.clip_composite_draw(44, 51, 42, 21, 0, '', sx, sy, 30, 30)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
         return self.x - 20, self.y - 20, self.x +20, self.y + 20
 

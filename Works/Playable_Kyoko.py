@@ -4,6 +4,7 @@ import game_world
 import canvas_size
 import math
 import time
+import server
 
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 20.0
@@ -125,7 +126,7 @@ class RUN_lr:
                 self.x += self.dir_lr * (DASH_SPEED_PPS) * game_framework.frame_time
             else:
                 self.x += self.dir_lr * (RUN_SPEED_PPS) * game_framework.frame_time
-            self.x = clamp(0, self.x, canvas_size.WID)
+            self.x = clamp(50, self.x, server.background.WEI - 50)
 
             if self.JumpState:
                 self.JUMP()
@@ -143,17 +144,19 @@ class RUN_lr:
 
     @staticmethod
     def draw(self):
+        sx = self.x - server.background.window_left
+
         if self.JumpState:
             if self.face_dir == 1:
-                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', self.x, self.y,140,200)
+                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', sx, self.y,140,200)
             else:
-                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', self.x, self.y,140,200)
+                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', sx, self.y,140,200)
 
         else:
             if self.dir_lr == 1:
-                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', self.x, self.y,140,200)
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', sx, self.y,140,200)
             else:
-                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', self.x, self.y,140,200)
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', sx, self.y,140,200)
 class RUN_ud:
     @staticmethod
     def enter(self, event):
@@ -177,7 +180,7 @@ class RUN_ud:
                 self.y += self.dir_ud * DASH_SPEED_PPS * game_framework.frame_time
             else:
                 self.y += self.dir_ud  * RUN_SPEED_PPS * game_framework.frame_time
-            self.y = clamp(0, self.y, canvas_size.HEI)
+            self.y = clamp(50, self.y, server.background.HEI - 50)
             if self.JumpState:
                 self.JUMP()
                 self.y += self.JumpHeight
@@ -189,17 +192,19 @@ class RUN_ud:
                 self.all_jumpHeight = 0
     @staticmethod
     def draw(self):
+        sy = self.y - server.background.window_bottom
+
         if self.JumpState:
             if self.face_dir == 1:
-                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', self.x, self.y,140,200)
+                self.image.clip_composite_draw(0 * 45, 346, 45, 69,0,'', self.x, sy,140,200)
             else:
-                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', self.x, self.y,140,200)
+                self.image.clip_composite_draw(1 * 45, 346, 45, 69,0, 'h', self.x, sy,140,200)
 
         else:
             if self.face_dir == 1:
-                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', self.x, self.y,140,200)
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'', self.x, sy,140,200)
             else:
-                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', self.x, self.y,140,200)
+                self.image.clip_composite_draw(int(self.frame) * 59, 134, 58, 70,0,'h', self.x, sy,140,200)
 
 class RUN_diag: #대각선 이동
     @staticmethod
@@ -428,63 +433,6 @@ class Kyoko:
         draw_rectangle(*self.get_TT())
         debug_print('PPPP')
         debug_print(f'Face Dir: {self.face_dir}, Dir: {self.dir_lr}')
-        # if self.jump_turn == True:
-        #     if self.jump_last_v>=self.jump_progress_v:
-        #         if self.dir_last >0:
-        #             self.image.clip_draw(2 * 45, 346, 45, 69, self.x, self.y)
-        #         else:
-        #             self.image_L.clip_draw(2 * 50, 410, 50, 69, self.x, self.y)
-        #     elif self.dir_lr == 1 and self.dir_ud == 0: # 오른쪽 이동
-        #         self.jump_dir_R()
-        #     elif self.dir_lr == -1 and self.dir_ud == 0:    #왼쪽 이동
-        #         self.jump_dir_L()
-        #     elif self.dir_ud != 0:    #위쪽 이동
-        #         if self.dir_last > 0:
-        #             self.jump_dir_R()
-        #         else:
-        #             self.jump_dir_L()
-        #     else:    #아래쪽 이동
-        #         if self.dir_last > 0:
-        #             self.jump_dir_R()
-        #         else:
-        #             self.jump_dir_L()
-        # elif self.frame_turn <= 2:    #캐릭터 이동 그리기
-        #     if self.dir_lr == 1 and self.dir_ud == 0: # 오른쪽 이동
-        #         self.run_dir_R()
-        #     elif self.dir_lr == -1 and self.dir_ud == 0:    #왼쪽 이동
-        #         self.run_dir_L()
-        #     elif self.dir_lr == 0 and self.dir_ud == 0:   #idle
-        #         if self.dir_last == 1:   #오른쪽을 보는 상태
-        #             self.image.clip_draw(self.frame * 39, 415, 39, 69, self.x, self.y)
-        #         else:               #왼쪽을 보는 상태
-        #             self.image_L.clip_draw(self.frame * 41, 0, 37, 69, self.x, self.y)
-        #     elif self.dir_ud == 1:    #위쪽 이동
-        #         if self.dir_last > 0:
-        #             self.run_dir_R()
-        #         else:
-        #             self.run_dir_L()
-        #     elif self.dir_ud == -1:    #아래쪽 이동
-        #         if self.dir_last > 0:
-        #             self.run_dir_R()
-        #         else:
-        #             self.run_dir_L()
-        # elif self.frame_turn <=5:   #노멀 공격
-        #     if self.normal_attack_stack <= 0:
-        #         if self.dir_last > 0:
-        #             self.image.clip_draw(self.frame * 65, 484, 60, 67, self.x, self.y)
-        #         else:
-        #             self.image_L.clip_draw(self.frame * 62, 210, 61, 65, self.x, self.y)
-        #     elif self.normal_attack_stack <= 1:
-        #         if self.dir_last > 0:
-        #             self.image.clip_draw(self.frame * 69, 549, 68, 69, self.x, self.y)
-        #         else:
-        #             self.image_L.clip_draw(self.frame * 70, 275, 70, 66, self.x, self.y)
-        #     elif self.normal_attack_stack <= 2:
-        #         if self.dir_last > 0:
-        #             self.image.clip_draw(self.frame * 84, 620, 83, 72, self.x, self.y)
-        #         else:
-        #             self.image_L.clip_draw(self.frame * 86, 341, 86, 69, self.x, self.y)
-        #     self.normal_attack_changer()
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -506,8 +454,8 @@ class Kyoko:
                 other.under_attack = True
             elif self.event_test != ATKD:
                 other.under_attack = False
-        if group == 'Player:Enermy':
-            print("uooooooooooooooooooooooooooo")
+        if group == 'Player:Enermy' or group == 'Player:Boss':
+            print("Atack")
             if self.Enermy_attacking == False:
                 if self.event_test == ATKD:
                     other.hp -= self.power
@@ -515,11 +463,6 @@ class Kyoko:
 
 
     def JUMP(self):
-            # if self.Jump_V > 0:
-            #     self.JumpHeight = (0.5 * PLAYER_WEIGHT * (self.Jump_V * self.Jump_V))
-            # else:
-            #     self.JumpHeight = -(0.5 * PLAYER_WEIGHT * (self.Jump_V * self.Jump_V))
-            # self.Jump_V -=GRAVITY*game_framework.frame_time
         self.JumpHeight = self.Jump_V * JUMP_SPEED_PPS*game_framework.frame_time
         self.Jump_V -= GRAVITY
     def Jump_state(self):
