@@ -4,13 +4,24 @@ import canvas_size
 # from camera import *
 import server
 import Playable_Kyoko
-class First_Stage:
+stage_max_enermy = [4,4,4,4,4,4,4,1]
+stage_name = ['School']
+class Stage:
+    images =None
+    def load_images(self):
+        if Stage.images == None:
+            Stage.images = {}
+            for name in stage_name:
+                Stage.images[name] = [load_image("./Resource/stage/"+ name + "(%d)" % i + ".png") for i in range(1, 8)]
     def __init__(self,Stage_location):
-        self.image = load_image('Resource/stage/stage01/first_stage_one.png')
+        self.load_images()
+        self.stage_number = 0
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
-        self.WID = self.image.w
-        self.HEI = self.image.h
+        self.WID = self.images['School'][self.stage_number].w
+        self.HEI = self.images['School'][self.stage_number].h
+        self.next_stage = False
+        self.dead_enermy = 0
     def update(self):
         self.window_left = clamp(0,
                                   int(server.Player.x)- self.canvas_width//2,
@@ -19,6 +30,12 @@ class First_Stage:
         self.window_bottom = clamp(0,
                                    int(server.Player.y) - self.canvas_height//2,
                                    self.HEI - self.canvas_height - 1)
+        if self.next_stage == True:
+            self.stage_number += 1
+            self.WID = self.images['School'][self.stage_number].w
+            self.HEI = self.images['School'][self.stage_number].h
+            self.next_stage = False
+            self.dead_enermy = 0
         # if self.WID+(canvas_size.WID//2+401)>=canvas_size.WID and self.WID-(canvas_size.WID//2+401) <=10:
         #     if self.WID > 0 and self.WID < canvas_size.WID:
         #         if server.Player.dir_lr != 0:
@@ -46,7 +63,7 @@ class First_Stage:
         #     self.HEI -= 1
 
     def draw(self):
-        self.image.clip_draw_to_origin(self.window_left, self.window_bottom,
+        Stage.images['School'][self.stage_number].clip_draw_to_origin(self.window_left, self.window_bottom,
                                        self.canvas_width, self.canvas_height,
                                        0, 0)
 

@@ -116,6 +116,7 @@ class Misuzu:
 
     def update(self):
         if self.hp <= 0:
+            server.stage.dead_enermy += 1
             game_world.remove_object(self)
         self.bt.run()
 
@@ -126,8 +127,8 @@ class Misuzu:
     def draw(self):
         draw_rectangle(*self.get_bb())
         draw_rectangle(*self.get_TT())
-        sy = self.y - server.background.window_bottom
-        sx = self.x - server.background.window_left
+        sy = self.y - server.stage.window_bottom
+        sx = self.x - server.stage.window_left
         if math.cos(self.dir) < 0:
             if self.speed == 0:
                 Misuzu.images['Idle'][int(self.frame)].composite_draw(0, 'h', sx, sy, 190, 200)
@@ -140,13 +141,13 @@ class Misuzu:
                 Misuzu.images['Walk'][int(self.frame)].draw(sx, sy, 190, 200)
 
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
-        sy = self.y - server.background.window_bottom
-        sx = self.x - server.background.window_left
+        sy = self.y - server.stage.window_bottom
+        sx = self.x - server.stage.window_left
         return sx - 60, sy - 95, sx + 60, sy + 85
 
     def get_TT(self):  # 스테이지와의 충돌
-        sy = self.y - server.background.window_bottom
-        sx = self.x - server.background.window_left
+        sy = self.y - server.stage.window_bottom
+        sx = self.x - server.stage.window_left
         return sx - 60, sy - 95, sx + 60, sy - 80
     def handle_collision(self, other, group):
         left_a, bottom_a, right_a, top_a = other.get_bb()

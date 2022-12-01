@@ -18,10 +18,10 @@ class Apple:
         pass
     def draw(self):
         draw_rectangle(*self.get_bb())
-        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         self.image.clip_composite_draw(59, 54, 14, 18, 0, '', sx, sy, 30, 30)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
-        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         return sx - 20, sy - 20, sx +20, sy + 20
 
 
@@ -69,10 +69,10 @@ class Salad:
         pass
     def draw(self):
         draw_rectangle(*self.get_bb())
-        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         self.image.clip_composite_draw(55, 54, 20, 14, 0, '', sx, sy, 30, 30)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
-        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         return sx - 20, sy - 20, sx +20, sy + 20
 
 
@@ -120,10 +120,10 @@ class Chicken:
         pass
     def draw(self):
         draw_rectangle(*self.get_bb())
-        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         self.image.clip_composite_draw(44, 51, 42, 21, 0, '', sx, sy, 30, 30)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
-        sx, sy = self.x - server.background.window_left, self.y - server.background.window_bottom
+        sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         return sx - 20, sy - 20, sx +20, sy + 20
 
 
