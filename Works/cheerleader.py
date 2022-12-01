@@ -117,7 +117,8 @@ class Cheerleader:
         if self.hp <= 0:
             server.stage.dead_enermy += 1
             game_world.remove_object(self)
-
+        if server.stage.next_stage == True:
+            game_world.remove_object(self)
         self.bt.run()
 
         self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time)%FRAMES_PER_ACTION_RUN

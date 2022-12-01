@@ -22,7 +22,9 @@ from hibari import Hibari
 
 from destructible_object import Vending_machine, Gold_statue
 from item import Apple, Salad, Chicken
-from portal import Portal
+from portal import Portal, Portal2
+
+from loading import Loading, Punch_loading
 
 import server
 
@@ -59,20 +61,22 @@ def enter():
     server.Destructible_object = [Vending_machine(), Gold_statue()]
     server.item = [Apple(), Salad(), Chicken()]
 
-    server.portal = Portal()
+    server.portal = [Portal(),Portal2()]
 
+    server.loading = [Loading(), Punch_loading()]
     #0 -> 배경
     #1 -> 오브젝트
     #2 -> 플레이어 상태 표기
     #3 -> 플레이어
     game_world.add_object(server.Player, 2)
     game_world.add_object(server.stage, 0)
-    game_world.add_object(server.portal, 1)
+    game_world.add_objects(server.portal, 1)
     game_world.add_object(server.Default_deco_bar, 3)
     game_world.add_objects(server.Enermy, 2)
     game_world.add_objects(server.Boss, 2)
     game_world.add_objects(server.item,1)
     game_world.add_objects(server.Destructible_object, 1)
+    game_world.add_objects(server.loading,4)
 
     game_world.add_collison_pairs(server.Player, server.Destructible_object, 'Player:Destructible_object')
     game_world.add_collison_pairs(server.Player, server.stage, 'Player:stage')
@@ -81,7 +85,7 @@ def enter():
     game_world.add_collison_pairs(server.Player, server.Boss, 'Player:Boss')
     game_world.add_collison_pairs(server.Boss,server.stage, 'Boss:stage')
     game_world.add_collison_pairs(server.Player, server.item, 'Player:Item')
-    game_world.add_collison_pairs(server.Player, server.portal, 'Player:Portal')
+    game_world.add_collison_pairs(server.Player, server.portal, 'Player:aPortal')
 
 def exit():
     game_world.clear()

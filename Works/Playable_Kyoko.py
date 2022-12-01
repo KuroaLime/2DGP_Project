@@ -317,6 +317,7 @@ class Normal_attack:
         print('EXIT Normal_attack')
         self.Enermy_attacking = False
         self.portalState = False
+        self.portalTimer = 0
     @staticmethod
     def do(self):
         if self.attacking == True:
@@ -340,7 +341,7 @@ class Normal_attack:
             self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
         if self.portalState == True:
             print('portalTimer : ',self.portalTimer)
-            if self.portalTimer <=3:
+            if self.portalTimer <=5:
                 self.portalTimer += FRAMES_PER_ACTION_NORMAL_ATTACK00 * ACTION_PER_TIME * game_framework.frame_time
             else:
                 self.portalTimer=0

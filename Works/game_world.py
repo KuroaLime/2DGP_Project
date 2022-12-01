@@ -1,4 +1,4 @@
-world=[[],[],[],[]]
+world=[[],[],[],[],[]]
 collision_group = dict()
 def add_object(o, depth):
     world[depth].append(o)

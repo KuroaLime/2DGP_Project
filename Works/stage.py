@@ -6,6 +6,11 @@ import server
 import Playable_Kyoko
 stage_max_enermy = [4,4,4,4,4,4,4,1]
 stage_name = ['School']
+
+FRAMES_PER_ACTION_NORMAL_ATTACK00 = 6
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+
 class Stage:
     images =None
     def load_images(self):
@@ -22,6 +27,7 @@ class Stage:
         self.HEI = self.images['School'][self.stage_number].h
         self.next_stage = False
         self.dead_enermy = 0
+        self.Timer = 0
     def update(self):
         self.window_left = clamp(0,
                                   int(server.Player.x)- self.canvas_width//2,
@@ -31,11 +37,15 @@ class Stage:
                                    int(server.Player.y) - self.canvas_height//2,
                                    self.HEI - self.canvas_height - 1)
         if self.next_stage == True:
-            self.stage_number += 1
-            self.WID = self.images['School'][self.stage_number].w
-            self.HEI = self.images['School'][self.stage_number].h
-            self.next_stage = False
-            self.dead_enermy = 0
+            if self.Timer >= 5.0:
+                self.stage_number += 1
+                self.WID = self.images['School'][self.stage_number].w
+                self.HEI = self.images['School'][self.stage_number].h
+                self.dead_enermy = 0
+                self.next_stage = False
+                self.Timer = 0
+            elif self.Timer <=5:
+                self.Timer += FRAMES_PER_ACTION_NORMAL_ATTACK00 * ACTION_PER_TIME * game_framework.frame_time
         # if self.WID+(canvas_size.WID//2+401)>=canvas_size.WID and self.WID-(canvas_size.WID//2+401) <=10:
         #     if self.WID > 0 and self.WID < canvas_size.WID:
         #         if server.Player.dir_lr != 0:

@@ -11,3 +11,5 @@ Destructible_object = None
 item = None
 
 portal = None
+
+loading = None
