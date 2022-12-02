@@ -53,7 +53,7 @@ def enter():
 
     server.Player = Kyoko()
     server.Enermy = [Cheerleader(), School_boy(), School_girl(), Cyborg(), Police_man()]
-    server.Boss = [Misuzu(),Hibari()]
+    server.Boss = [Misuzu(), Hibari()]
 
     server.stage = Stage(0)
     server.Default_deco_bar = Black_bar()
@@ -70,12 +70,12 @@ def enter():
     game_world.add_object(server.Player, 2)
     game_world.add_object(server.stage, 0)
     game_world.add_objects(server.portal, 1)
-    game_world.add_object(server.Default_deco_bar, 3)
-    game_world.add_objects(server.Enermy, 2)
-    game_world.add_objects(server.Boss, 2)
+    game_world.add_object(server.Default_deco_bar, 4)
+    game_world.add_objects(server.Enermy, 3)
+    # game_world.add_objects(server.Boss, 3)
     game_world.add_objects(server.item,1)
     game_world.add_objects(server.Destructible_object, 1)
-    game_world.add_objects(server.loading,4)
+    game_world.add_objects(server.loading,5)
 
     game_world.add_collison_pairs(server.Player, server.Destructible_object, 'Player:Destructible_object')
     game_world.add_collison_pairs(server.Player, server.stage, 'Player:stage')
@@ -160,6 +160,7 @@ def add_enermy():
     if server.stage.next_stage == True:
         print('add enermysssssssssssssssss')
         if server.stage.Timer >= 5.0:
+            server.Enermy = [Cheerleader(), School_boy(), School_girl(), Cyborg(), Police_man()]
             game_world.add_objects(server.Enermy, 2)
             game_world.add_collison_pairs(server.Player, server.Enermy, 'Player:Enermy')
             game_world.add_collison_pairs(server.Enermy, server.stage, 'Enermy:stage')

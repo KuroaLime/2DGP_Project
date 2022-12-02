@@ -58,12 +58,20 @@ def handle_events():
                 case pico2d.SDLK_w:
                     if server.Menu_button_location >0:
                         server.Menu_button_location -= 1
-                case pico2d.SDLK_j:
+                case pico2d.SDLK_a:
                     if server.Menu_button_location == 0:
                         pass
                     elif server.Menu_button_location == 1:
                         pass
                     elif server.Menu_button_location == 2:
                         pass
-                    elif server.Menu_button_location == 3:
+                case pico2d.SDLK_d:
+                    if server.Menu_button_location == 0:
+                        pass
+                    elif server.Menu_button_location == 1:
+                        pass
+                    elif server.Menu_button_location == 2:
+                        pass
+                case pico2d.SDLK_j:
+                    if server.Menu_button_location == 3:
                         pass

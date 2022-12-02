@@ -115,9 +115,9 @@ class Cheerleader:
         self.bt = BehaviorTree(chase_wander_node)
 
     def update(self):
-        if self.stage_numbers != server.stage.stage_number:
-            self.hp = 200
-            self.stage_numbers = server.stage.stage_number
+        # if self.stage_numbers != server.stage.stage_number:
+        #     self.hp = 200
+        #     self.stage_numbers = server.stage.stage_number
         if self.hp <= 0:
             server.stage.dead_enermy += 1
             game_world.remove_object(self)
