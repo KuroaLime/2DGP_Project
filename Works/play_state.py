@@ -25,7 +25,7 @@ from item import Apple, Salad, Chicken
 from portal import Portal, Portal2
 
 from loading import Loading, Punch_loading
-from hp_bar import Hp_bar
+from hp_bar import Hp_bar, Character_face
 import server
 
 # class Grass:
@@ -55,7 +55,7 @@ def enter():
     server.Enermy = [Cheerleader(), School_boy(), School_girl(), Cyborg(), Police_man()]
     server.Boss = [Misuzu(), Hibari()]
 
-    server.Player_hp_bar = Hp_bar()
+    server.Player_hp_bar = [Hp_bar(),Character_face()]
 
     server.stage = Stage(0)
     server.Default_deco_bar = Black_bar()
@@ -78,7 +78,7 @@ def enter():
     game_world.add_objects(server.item,1)
     game_world.add_objects(server.Destructible_object, 1)
     game_world.add_objects(server.loading,6)
-    game_world.add_object(server.Player_hp_bar, 5)
+    game_world.add_objects(server.Player_hp_bar, 5)
 
     game_world.add_collison_pairs(server.Player, server.Destructible_object, 'Player:Destructible_object')
     game_world.add_collison_pairs(server.Player, server.stage, 'Player:stage')
