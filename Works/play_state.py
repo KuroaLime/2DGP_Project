@@ -49,7 +49,6 @@ def handle_events():
 
 
 def enter():
-
     hide_cursor()
 
     server.Player = Kyoko()
@@ -82,7 +81,7 @@ def enter():
     game_world.add_collison_pairs(server.Player, server.stage, 'Player:stage')
     game_world.add_collison_pairs(server.Player, server.Enermy, 'Player:Enermy')
     game_world.add_collison_pairs(server.Enermy, server.stage, 'Enermy:stage')
-    game_world.add_collison_pairs(server.Player, server.Boss, 'Player:Boss')
+    # game_world.add_collison_pairs(server.Player, server.Boss, 'Player:Boss')
     game_world.add_collison_pairs(server.Boss,server.stage, 'Boss:stage')
     game_world.add_collison_pairs(server.Player, server.item, 'Player:Item')
     game_world.add_collison_pairs(server.Player, server.portal, 'Player:aPortal')
@@ -92,6 +91,7 @@ def exit():
 
 
 def update():
+    add_enermy()
     for game_object in game_world.all_objects():
         game_object.update()
     for a, b, group in game_world.all_collision_pairs():
@@ -155,6 +155,16 @@ def stage_collide(a,b):
     if bottom_a < bottom_b: return True
 
     return False
+
+def add_enermy():
+    if server.stage.next_stage == True:
+        print('add enermysssssssssssssssss')
+        if server.stage.Timer >= 5.0:
+            game_world.add_objects(server.Enermy, 2)
+            game_world.add_collison_pairs(server.Player, server.Enermy, 'Player:Enermy')
+            game_world.add_collison_pairs(server.Enermy, server.stage, 'Enermy:stage')
+
+
 def pause():
     pass
 

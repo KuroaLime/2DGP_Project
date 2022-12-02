@@ -44,6 +44,7 @@ class Stage:
                 self.dead_enermy = 0
                 self.next_stage = False
                 self.Timer = 0
+                
             elif self.Timer <=5:
                 self.Timer += FRAMES_PER_ACTION_NORMAL_ATTACK00 * ACTION_PER_TIME * game_framework.frame_time
         # if self.WID+(canvas_size.WID//2+401)>=canvas_size.WID and self.WID-(canvas_size.WID//2+401) <=10:

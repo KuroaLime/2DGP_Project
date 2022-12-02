@@ -31,6 +31,7 @@ class Cheerleader:
         for p in positions:
             self.patrol_points.append((p[0], 1024-p[1]))
     def __init__(self):
+        self.stage_numbers = 0
         self.prepare_patrol_points()
         self.patrol_order = 1
         self.hp = 20
@@ -114,6 +115,9 @@ class Cheerleader:
         self.bt = BehaviorTree(chase_wander_node)
 
     def update(self):
+        if self.stage_numbers != server.stage.stage_number:
+            self.hp = 200
+            self.stage_numbers = server.stage.stage_number
         if self.hp <= 0:
             server.stage.dead_enermy += 1
             game_world.remove_object(self)

@@ -5,26 +5,20 @@ import play_state
 from phone_window import Phone_boarder
 from phone_background import Phone_background
 from phone_window_option import *
-from cursor import Cursor
+import server
 
-Menu_window = None
-Menu_background = None
-Menu_Cursor =None
-Menu_option = []
+
 def enter():
     hide_cursor()
-    global Menu_window,Menu_background,Menu_Cursor
 
-    Menu_window = Phone_boarder()
-    Menu_background = Phone_background()
-    Menu_option = [Phone_option_instruction(),Phone_option_music(), Phone_option_soundEffect(), Phone_option_voice(), Phone_option_language(), Phone_option_subtitle(), Phone_option_textSpeed(),  Phone_option_save_exit()]
-    Menu_Cursor= Cursor()
+    server.Menu_window = Phone_boarder()
+    server.Menu_background = Phone_background()
+    server.Menu_option = [Phone_option_music(), Phone_option_soundEffect(), Phone_option_voice(),  Phone_option_save_exit()]
 
-    menu_world.add_object(Menu_background, 0)
-    menu_world.add_object(Menu_window, 1)
-    for i in range(len(Menu_option)):
-        menu_world.add_object(Menu_option[i], 2)
-    menu_world.add_object(Menu_Cursor,2)
+
+    menu_world.add_object(server.Menu_background, 0)
+    menu_world.add_object(server.Menu_window, 1)
+    menu_world.add_objects(server.Menu_option, 2)
 
 def exit():
     pass
@@ -34,10 +28,10 @@ def update():
         game_object.update()
 def draw():
     clear_canvas()
-    draw_world()
+    draw_menu()
     update_canvas()
 
-def draw_world():
+def draw_menu():
     play_state.draw_world()
 
     for game_object in menu_world.all_objects():
@@ -59,8 +53,17 @@ def handle_events():
                 case pico2d.SDLK_ESCAPE:
                     game_framework.pop_state()
                 case pico2d.SDLK_s:
-                    if Menu_Cursor.my_button_dir < 6:
-                        Menu_Cursor.my_button_dir += 1
+                    if server.Menu_button_location < 3:
+                        server.Menu_button_location += 1
                 case pico2d.SDLK_w:
-                    if Menu_Cursor.my_button_dir >0:
-                        Menu_Cursor.my_button_dir -= 1
+                    if server.Menu_button_location >0:
+                        server.Menu_button_location -= 1
+                case pico2d.SDLK_j:
+                    if server.Menu_button_location == 0:
+                        pass
+                    elif server.Menu_button_location == 1:
+                        pass
+                    elif server.Menu_button_location == 2:
+                        pass
+                    elif server.Menu_button_location == 3:
+                        pass

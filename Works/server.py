@@ -2,7 +2,7 @@ Player = None
 Enermy = None
 Boss = None
 
-background = None
+stage = None
 
 running = None
 
@@ -12,4 +12,12 @@ item = None
 
 portal = None
 
-loading = None
+loading =None
+
+
+#menu state
+
+Menu_window = None
+Menu_background = None
+Menu_option = []
+Menu_button_location = 0
