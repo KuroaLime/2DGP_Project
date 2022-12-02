@@ -7,12 +7,12 @@ portal_location_x = [[1920,1920,1920],[0,960,240]]
 portal_location_y = [[700,700,700],[0,700,400]]
 class Portal:
     def __init__(self):
-        self.x, self.y = portal_location_x[0][server.stage.stage_number], portal_location_y[0][server.stage.stage_number]
+        self.x, self.y = portal_location_x[0][server.stage_number], portal_location_y[0][server.stage_number]
 
     def update(self):
-        if self.x != portal_location_x[0][server.stage.stage_number] or self.y != portal_location_y[0][server.stage.stage_number]:
-            self.x = portal_location_x[0][server.stage.stage_number]
-            self.y = portal_location_y[0][server.stage.stage_number]
+        if self.x != portal_location_x[0][server.stage_number] or self.y != portal_location_y[0][server.stage_number]:
+            self.x = portal_location_x[0][server.stage_number]
+            self.y = portal_location_y[0][server.stage_number]
     def draw(self):
         draw_rectangle(*self.get_bb())
 
@@ -25,18 +25,18 @@ class Portal:
         left_a, bottom_a, right_a, top_a = other.get_bb()
         left_b, bottom_b, right_b, top_b = self.get_bb()
         # print('collision Portal!!!!!!')
-        if server.stage.dead_enermy >= max_dead_enermy[server.stage.stage_number]:
+        if server.stage.dead_enermy >= max_dead_enermy[server.stage_number]:
             other.portalState = True
 
 
 class Portal2:
     def __init__(self):
-        self.x, self.y = portal_location_x[1][server.stage.stage_number], portal_location_y[1][server.stage.stage_number]
+        self.x, self.y = portal_location_x[1][server.stage_number], portal_location_y[1][server.stage_number]
 
     def update(self):
-        if self.x != portal_location_x[1][server.stage.stage_number] or self.y != portal_location_y[1][server.stage.stage_number]:
-            self.x = portal_location_x[1][server.stage.stage_number]
-            self.y = portal_location_y[1][server.stage.stage_number]
+        if self.x != portal_location_x[1][server.stage_number] or self.y != portal_location_y[1][server.stage_number]:
+            self.x = portal_location_x[1][server.stage_number]
+            self.y = portal_location_y[1][server.stage_number]
     def draw(self):
         draw_rectangle(*self.get_bb())
 
@@ -50,5 +50,5 @@ class Portal2:
         left_b, bottom_b, right_b, top_b = self.get_bb()
         # print('collision Portal!!!!!!')
 
-        if server.stage.dead_enermy >= max_dead_enermy[server.stage.stage_number]:
+        if server.stage.dead_enermy >= max_dead_enermy[server.stage_number]:
             other.portalState = True

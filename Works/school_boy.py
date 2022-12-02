@@ -128,8 +128,8 @@ class School_boy:
         self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time)%FRAMES_PER_ACTION_RUN
         self.x += self.speed * math.cos(self.dir) * game_framework.frame_time
         self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
-        self.y = clamp(restricted_area.Min_HEI[server.stage.stage_number], self.y, server.stage.HEI - restricted_area.Max_HEI[server.stage.stage_number])
-        self.x = clamp(restricted_area.Min_WID[server.stage.stage_number], self.x, server.stage.WID - restricted_area.Max_WID[server.stage.stage_number])
+        self.y = clamp(restricted_area.Min_HEI[server.stage_number], self.y, server.stage.HEI - restricted_area.Max_HEI[server.stage_number])
+        self.x = clamp(restricted_area.Min_WID[server.stage_number], self.x, server.stage.WID - restricted_area.Max_WID[server.stage_number])
     def draw(self):
         draw_rectangle(*self.get_bb())
         draw_rectangle(*self.get_TT())

@@ -1,4 +1,5 @@
 Player = None
+Player_hp_bar = None
 Enermy = None
 Boss = None
 
@@ -14,7 +15,7 @@ portal = None
 
 loading =None
 
-
+stage_number = 0
 #menu state
 
 Menu_window = None

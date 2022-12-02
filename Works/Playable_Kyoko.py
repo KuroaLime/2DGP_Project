@@ -130,7 +130,7 @@ class RUN_lr:
                 self.x += self.dir_lr * (DASH_SPEED_PPS) * game_framework.frame_time
             else:
                 self.x += self.dir_lr * (RUN_SPEED_PPS) * game_framework.frame_time
-            self.x = clamp(restricted_area.Min_WID[server.stage.stage_number], self.x, server.stage.WID - restricted_area.Max_WID[server.stage.stage_number]+self.all_jumpHeight)
+            self.x = clamp(restricted_area.Min_WID[server.stage_number], self.x, server.stage.WID - restricted_area.Max_WID[server.stage_number]+self.all_jumpHeight)
 
             if self.JumpState:
                 self.JUMP()
@@ -186,7 +186,7 @@ class RUN_ud:
                 self.y += self.dir_ud * DASH_SPEED_PPS * game_framework.frame_time
             else:
                 self.y += self.dir_ud * RUN_SPEED_PPS * game_framework.frame_time
-            self.y = clamp(restricted_area.Min_HEI[server.stage.stage_number], self.y, server.stage.HEI - restricted_area.Max_HEI[server.stage.stage_number]+self.all_jumpHeight)
+            self.y = clamp(restricted_area.Min_HEI[server.stage_number], self.y, server.stage.HEI - restricted_area.Max_HEI[server.stage_number]+self.all_jumpHeight)
 
             if self.JumpState:
                 self.JUMP()
@@ -253,8 +253,8 @@ class RUN_diag: #대각선 이동
             else:
                 self.x += self.dir_lr * RUN_SPEED_PPS * game_framework.frame_time
                 self.y += self.dir_ud * RUN_SPEED_PPS * game_framework.frame_time
-            self.y = clamp(restricted_area.Min_HEI[server.stage.stage_number], self.y, server.stage.HEI - restricted_area.Max_HEI[server.stage.stage_number]+self.all_jumpHeight)
-            self.x = clamp(restricted_area.Min_WID[server.stage.stage_number], self.x, server.stage.WID - restricted_area.Max_WID[server.stage.stage_number]+self.all_jumpHeight)
+            self.y = clamp(restricted_area.Min_HEI[server.stage_number], self.y, server.stage.HEI - restricted_area.Max_HEI[server.stage_number]+self.all_jumpHeight)
+            self.x = clamp(restricted_area.Min_WID[server.stage_number], self.x, server.stage.WID - restricted_area.Max_WID[server.stage_number]+self.all_jumpHeight)
 
             if self.JumpState:
                 self.JUMP()

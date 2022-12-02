@@ -31,7 +31,7 @@ class Cheerleader:
         for p in positions:
             self.patrol_points.append((p[0], 1024-p[1]))
     def __init__(self):
-        self.stage_numbers = 0
+        # self.stage_numbers = 0
         self.prepare_patrol_points()
         self.patrol_order = 1
         self.hp = 20
@@ -128,8 +128,8 @@ class Cheerleader:
         self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time)%FRAMES_PER_ACTION_RUN
         self.x += self.speed * math.cos(self.dir) * game_framework.frame_time
         self.y += self.speed * math.sin(self.dir) * game_framework.frame_time
-        self.y = clamp(int(restricted_area.Min_HEI[server.stage.stage_number]), self.y, server.stage.HEI - int(restricted_area.Max_HEI[server.stage.stage_number]))
-        self.x = clamp(int(restricted_area.Min_WID[server.stage.stage_number]), self.x, server.stage.WID - int(restricted_area.Max_WID[server.stage.stage_number]))
+        self.y = clamp(int(restricted_area.Min_HEI[server.stage_number]), self.y, server.stage.HEI - int(restricted_area.Max_HEI[server.stage_number]))
+        self.x = clamp(int(restricted_area.Min_WID[server.stage_number]), self.x, server.stage.WID - int(restricted_area.Max_WID[server.stage_number]))
     def draw(self):
         draw_rectangle(*self.get_bb())
         draw_rectangle(*self.get_TT())

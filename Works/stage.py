@@ -20,11 +20,11 @@ class Stage:
                 Stage.images[name] = [load_image("./Resource/stage/"+ name + "(%d)" % i + ".png") for i in range(1, 8)]
     def __init__(self,Stage_location):
         self.load_images()
-        self.stage_number = 0
+        # self.stage_number = 0
         self.canvas_width = get_canvas_width()
         self.canvas_height = get_canvas_height()
-        self.WID = self.images['School'][self.stage_number].w
-        self.HEI = self.images['School'][self.stage_number].h
+        self.WID = self.images['School'][server.stage_number].w
+        self.HEI = self.images['School'][server.stage_number].h
         self.next_stage = False
         self.dead_enermy = 0
         self.Timer = 0
@@ -38,9 +38,9 @@ class Stage:
                                    self.HEI - self.canvas_height - 1)
         if self.next_stage == True:
             if self.Timer >= 5.0:
-                self.stage_number += 1
-                self.WID = self.images['School'][self.stage_number].w
-                self.HEI = self.images['School'][self.stage_number].h
+                server.stage_number += 1
+                self.WID = self.images['School'][server.stage_number].w
+                self.HEI = self.images['School'][server.stage_number].h
                 self.dead_enermy = 0
                 self.next_stage = False
                 self.Timer = 0
@@ -74,7 +74,7 @@ class Stage:
         #     self.HEI -= 1
 
     def draw(self):
-        Stage.images['School'][self.stage_number].clip_draw_to_origin(self.window_left, self.window_bottom,
+        Stage.images['School'][server.stage_number].clip_draw_to_origin(self.window_left, self.window_bottom,
                                        self.canvas_width, self.canvas_height,
                                        0, 0)
 
