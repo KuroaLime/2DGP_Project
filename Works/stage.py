@@ -43,6 +43,7 @@ class Stage:
                 self.WID = self.images['School'][server.stage_number].w
                 self.HEI = self.images['School'][server.stage_number].h
                 self.next_stage = False
+                server.Player.move_stage = False
                 self.Timer = 0
                 
             elif self.Timer <=5:

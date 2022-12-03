@@ -52,7 +52,7 @@ def enter():
     hide_cursor()
 
     server.Player = Kyoko()
-    server.Enermy = [Cheerleader(), School_boy(), School_girl(), Cyborg(), Police_man()]
+    server.Enermy = [School_boy(), School_girl(), School_boy(), School_girl()]
     server.Boss = [Misuzu(), Hibari()]
 
     server.Player_hp_bar = [Hp_bar(),Character_face()]
@@ -85,7 +85,7 @@ def enter():
     game_world.add_collison_pairs(server.Player, server.Enermy, 'Player:Enermy')
     game_world.add_collison_pairs(server.Enermy, server.stage, 'Enermy:stage')
     # game_world.add_collison_pairs(server.Player, server.Boss, 'Player:Boss')
-    game_world.add_collison_pairs(server.Boss,server.stage, 'Boss:stage')
+    # game_world.add_collison_pairs(server.Boss,server.stage, 'Boss:stage')
     game_world.add_collison_pairs(server.Player, server.item, 'Player:Item')
     game_world.add_collison_pairs(server.Player, server.portal, 'Player:Portal')
 def exit():
@@ -172,11 +172,23 @@ def portal_collide(a,b):
 def add_enermy():
     if server.stage.next_stage == True:
         if server.stage.Timer >= 5.0:
-            print('add enermysssssssssssssssss')
-            server.Enermy = [Cheerleader(), School_boy(), School_girl(), Cyborg(), Police_man()]
-            game_world.add_objects(server.Enermy, 2)
-            game_world.add_collison_pairs(server.Player, server.Enermy, 'Player:Enermy')
-            game_world.add_collison_pairs(server.Enermy, server.stage, 'Enermy:stage')
+            if server.stage_number < 4:
+                server.Enermy = [School_boy(), School_girl(), School_boy(), School_girl()]
+            elif server.stage_number < 6:
+                server.Enermy = [School_girl(), School_girl(), School_girl(), School_girl(), School_girl()]
+            elif server.stage_number < 7:
+                server.Enermy = [School_girl(), School_girl(), School_boy(), School_boy(), Cheerleader(), Cheerleader(), Cheerleader()]
+            elif server.stage_number < 8:
+                server.Enermy = [Cheerleader(), School_boy(), School_girl(), Cyborg(), Police_man()]
+
+            if server.stage_number == 7 or server.stage_number == 13:
+                game_world.add_objects(server.Boss, 3)
+                game_world.add_collison_pairs(server.Player, server.Boss, 'Player:Boss')
+                game_world.add_collison_pairs(server.Boss, server.stage, 'Boss:stage')
+            else:
+                game_world.add_objects(server.Enermy, 2)
+                game_world.add_collison_pairs(server.Player, server.Enermy, 'Player:Enermy')
+                game_world.add_collison_pairs(server.Enermy, server.stage, 'Enermy:stage')
 
 
 def pause():

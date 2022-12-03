@@ -340,11 +340,12 @@ class Normal_attack:
         else:
             self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
             print('self time~')
-        if self.portalState == True:
+        if self.portalState == True and self.move_stage == False:
             print('portalTimer : ',self.portalTimer)
             if self.portalTimer <=5.0:
                 self.portalTimer += FRAMES_PER_ACTION_NORMAL_ATTACK00 * ACTION_PER_TIME * game_framework.frame_time
             else:
+                self.move_stage = True
                 self.portalTimer=0
                 server.stage.next_stage = True
 
@@ -400,7 +401,7 @@ class Kyoko:
         self.level = 1
         self.power = 10
         self.luck = 5
-
+        self.move_stage = False
         self.x, self.y = 500, 500
         self.frame = 0
         # self.last_frame=[12,    #idle                           #점프는 따로 필요 없어서 추가 안함
