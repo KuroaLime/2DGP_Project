@@ -36,6 +36,8 @@ JUMP_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 RD,RU,LD,LU,UD,UU,DD,DU,DASHD,DASHU,ATKD,ATKU,JUMPD,JUMPU,ATK_END, TIMER=range(16)
 event_name=['RD','RU','LD','LU','UD','UU','DD','DU','DASHD','DASHU','ATKD','ATKU','JUMPD','JUMPU','ATK_END', 'TIMER']
 
+next_stage_location = [(500, 500),(1920, 700),(200,400),(200,400)]
+behind_stage_location = [(1920, 700),(960,700),(2500, 400), (2500, 400)]
 key_event_table = {
     (SDL_KEYDOWN, SDLK_d): RD,
     (SDL_KEYDOWN, SDLK_a): LD,
@@ -339,9 +341,9 @@ class Normal_attack:
             self.last_attack_frame = self.frame
         else:
             self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
-            print('self time~')
+            # print('self time~')
         if self.portalState == True and self.move_stage == False:
-            print('portalTimer : ',self.portalTimer)
+            # print('portalTimer : ',self.portalTimer)
             if self.portalTimer <=5.0:
                 self.portalTimer += FRAMES_PER_ACTION_NORMAL_ATTACK00 * ACTION_PER_TIME * game_framework.frame_time
             else:
@@ -441,6 +443,8 @@ class Kyoko:
         self.next_stage = False
 
         self.Enermy_attacking = False
+
+        self.stage_location = server.stage_number
     def update(self):
         self.cur_state.do(self)
 

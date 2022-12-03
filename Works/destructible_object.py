@@ -3,6 +3,7 @@ import game_framework
 import server
 import random
 import key_table
+import game_world
 class Vending_machine:
     image=None
     def __init__(self):
@@ -18,6 +19,8 @@ class Vending_machine:
         if self.state == 1:
             Vending_machine.image = load_image('Resource/destructible_object/vending_machine_broken.png')
             self.state += 1
+        if server.stage.next_stage == True:
+            game_world.remove_object(self)
     def draw(self):
         draw_rectangle(*self.get_bb())
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
@@ -33,7 +36,7 @@ class Vending_machine:
     def handle_collision(self, other, group):
         # left_a, bottom_a, right_a, top_a = other.get_bb()
         # left_b, bottom_b, right_b, top_b = self.get_bb()
-        if group == 'Player:Destructible_object':
+        if group == 'Player:Vending_machine':
             if other.event_test == key_table.ATKD and self.under_attack == False:
                 if self.state < 2:
                     self.state += 1
@@ -51,7 +54,8 @@ class Gold_statue:
             Gold_statue.image = load_image('Resource/destructible_object/Different_types of_destructible_objects.png')
         self.under_attack = False
     def update(self):
-        pass
+        if server.stage.next_stage == True:
+            game_world.remove_object(self)
     def draw(self):
         draw_rectangle(*self.get_bb())
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
@@ -67,7 +71,7 @@ class Gold_statue:
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         return sx-100, sy - 130, sx+100, sy + 130
     def handle_collision(self, other, group):
-        if group == 'Player:Destructible_object':
+        if group == 'Player:Gold_statue':
             if other.event_test == key_table.ATKD and self.under_attack == False:
                 self.under_attack = True
                 if self.state < 4:

@@ -39,13 +39,19 @@ class Stage:
                                    self.HEI - self.canvas_height - 1)
         if self.next_stage == True:
             if self.Timer >= 5.0:
+                self.next_stage = False
+                server.Player.move_stage = False
+                server.Player.portalTimer = 0
                 self.dead_enermy = 0
                 self.WID = self.images['School'][server.stage_number].w
                 self.HEI = self.images['School'][server.stage_number].h
-                self.next_stage = False
-                server.Player.move_stage = False
                 self.Timer = 0
-                
+                if server.Player.stage_location < server.stage_number:
+                    server.Player.x, server.Player.y = Playable_Kyoko.next_stage_location[server.stage_number]
+                else:
+                    server.Player.x, server.Player.y = Playable_Kyoko.behind_stage_location[server.stage_number]
+                for i in range(2):
+                    server.portal[i].work_portal = False
             elif self.Timer <=5:
                 self.Timer += FRAMES_PER_ACTION_NORMAL_ATTACK00 * ACTION_PER_TIME * game_framework.frame_time
         # if self.WID+(canvas_size.WID//2+401)>=canvas_size.WID and self.WID-(canvas_size.WID//2+401) <=10:

@@ -3,12 +3,13 @@ import game_framework
 import server
 import random
 max_dead_enermy = [4,4,4,4,4,4,4,1]
-portal_location_x = [[1920,960,2500,2500,1920],[-50,1920,200,200]]
-portal_location_y = [[700,700,400,400,700],[0,700,400,400,400]]
+portal_location_x = [[1920,960,2500,2500,1920],[-50,1920,200,200,200]]
+portal_location_y = [[700,700,400,400,700],[0,700,400,400,400,400]]
 class Portal:
     def __init__(self):
         self.x, self.y = portal_location_x[0][server.stage_number], portal_location_y[0][server.stage_number]
         self.stage_location = server.stage_number
+        self.work_portal = False
     def update(self):
         if self.x != portal_location_x[0][server.stage_number] or self.y != portal_location_y[0][server.stage_number]:
             self.x = portal_location_x[0][server.stage_number]
@@ -25,7 +26,8 @@ class Portal:
         # left_a, bottom_a, right_a, top_a = other.get_bb()
         # left_b, bottom_b, right_b, top_b = self.get_bb()
         # print('collision Portal!!!!!!')]
-        if server.stage.next_stage == True and server.stage_number == self.stage_location:
+        if server.stage.next_stage == True and server.stage_number == self.stage_location and server.portal[1].work_portal == False and self.work_portal == False:
+            self.work_portal = True
             server.stage_number += 1
             print('Portal1 : stage number : ', server.stage_number)
             self.stage_location, server.portal[1].stage_location = server.stage_number, server.stage_number
@@ -39,6 +41,7 @@ class Portal2:
     def __init__(self):
         self.x, self.y = portal_location_x[1][server.stage_number], portal_location_y[1][server.stage_number]
         self.stage_location = server.stage_number
+        self.work_portal = False
     def update(self):
         if self.x != portal_location_x[1][server.stage_number] or self.y != portal_location_y[1][server.stage_number]:
             self.x = portal_location_x[1][server.stage_number]
@@ -55,7 +58,8 @@ class Portal2:
         # left_a, bottom_a, right_a, top_a = other.get_bb()
         # left_b, bottom_b, right_b, top_b = self.get_bb()
         # print('collision Portal!!!!!!')
-        if server.stage.next_stage == True and server.stage_number == self.stage_location:
+        if server.stage.next_stage == True and server.stage_number == self.stage_location and server.portal[0].work_portal == False and self.work_portal == False:
+            self.work_portal = True
             server.stage_number -= 1
             print('Portal2 : stage number : ', server.stage_number)
             self.stage_location, server.portal[0].stage_location = server.stage_number, server.stage_number

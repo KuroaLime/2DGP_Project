@@ -76,11 +76,10 @@ def enter():
     game_world.add_objects(server.Enermy, 3)
     # game_world.add_objects(server.Boss, 3)
     game_world.add_objects(server.item,1)
-    game_world.add_objects(server.Destructible_object, 1)
+
     game_world.add_objects(server.loading,6)
     game_world.add_objects(server.Player_hp_bar, 5)
 
-    game_world.add_collison_pairs(server.Player, server.Destructible_object, 'Player:Destructible_object')
     game_world.add_collison_pairs(server.Player, server.stage, 'Player:stage')
     game_world.add_collison_pairs(server.Player, server.Enermy, 'Player:Enermy')
     game_world.add_collison_pairs(server.Enermy, server.stage, 'Enermy:stage')
@@ -190,7 +189,15 @@ def add_enermy():
                 game_world.add_collison_pairs(server.Player, server.Enermy, 'Player:Enermy')
                 game_world.add_collison_pairs(server.Enermy, server.stage, 'Enermy:stage')
 
+            if server.stage_number == 1 or server.stage_number == 4 or server.stage_number == 6:
+                server.Destructible_object = Vending_machine()
+                game_world.add_object(server.Destructible_object, 1)
+                game_world.add_collison_pairs(server.Player, server.Destructible_object, 'Player:Vending_machine')
 
+            if server.stage_number == 8 or server.stage_number == 9 or server.stage_number == 10:
+                server.Destructible_object = Gold_statue()
+                game_world.add_object(server.Destructible_object, 1)
+                game_world.add_collison_pairs(server.Player, server.Destructible_object, 'Player:Gold_statue')
 def pause():
     pass
 
