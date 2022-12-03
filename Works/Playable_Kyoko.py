@@ -339,9 +339,10 @@ class Normal_attack:
             self.last_attack_frame = self.frame
         else:
             self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
+            print('self time~')
         if self.portalState == True:
             print('portalTimer : ',self.portalTimer)
-            if self.portalTimer <=5:
+            if self.portalTimer <=5.0:
                 self.portalTimer += FRAMES_PER_ACTION_NORMAL_ATTACK00 * ACTION_PER_TIME * game_framework.frame_time
             else:
                 self.portalTimer=0
@@ -482,12 +483,12 @@ class Kyoko:
         return sx - 45, (sy-self.all_jumpHeight) - 95, sx + 45, (sy -self.all_jumpHeight) -80
 
     def handle_collision(self, other, group):
-        if group == 'Player:Destructible_object':
-            if self.event_test == ATKD and other.under_attack == False:
-                other.state += 1
-                other.under_attack = True
-            elif self.event_test != ATKD:
-                other.under_attack = False
+        # if group == 'Player:Destructible_object':
+        #     if self.event_test == ATKD and other.under_attack == False:
+        #         other.state += 1
+        #         other.under_attack = True
+        #     elif self.event_test != ATKD:
+        #         other.under_attack = False
         if group == 'Player:Enermy' or group == 'Player:Boss':
             # print("Atack")
             if self.Enermy_attacking == False:

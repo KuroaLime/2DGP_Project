@@ -28,6 +28,7 @@ class Stage:
         self.next_stage = False
         self.dead_enermy = 0
         self.Timer = 0
+        self.loading = False
     def update(self):
         self.window_left = clamp(0,
                                   int(server.Player.x)- self.canvas_width//2,
@@ -38,10 +39,9 @@ class Stage:
                                    self.HEI - self.canvas_height - 1)
         if self.next_stage == True:
             if self.Timer >= 5.0:
-                server.stage_number += 1
+                self.dead_enermy = 0
                 self.WID = self.images['School'][server.stage_number].w
                 self.HEI = self.images['School'][server.stage_number].h
-                self.dead_enermy = 0
                 self.next_stage = False
                 self.Timer = 0
                 

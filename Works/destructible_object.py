@@ -2,6 +2,7 @@ from pico2d import *
 import game_framework
 import server
 import random
+import key_table
 class Vending_machine:
     image=None
     def __init__(self):
@@ -22,7 +23,7 @@ class Vending_machine:
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         if self.state == 0:
             self.image.clip_composite_draw(0, 0, 81, 81, 0, '', sx, sy, 300, 300)
-        elif self.state == 1 or self.state == 2 :
+        else:
             self.image.clip_composite_draw(23, 23, 101, 101, 0, '', sx, sy, 300, 300)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
@@ -30,19 +31,25 @@ class Vending_machine:
 
 
     def handle_collision(self, other, group):
-        left_a, bottom_a, right_a, top_a = other.get_bb()
-        left_b, bottom_b, right_b, top_b = self.get_bb()
-
+        # left_a, bottom_a, right_a, top_a = other.get_bb()
+        # left_b, bottom_b, right_b, top_b = self.get_bb()
+        if group == 'Player:Destructible_object':
+            if other.event_test == key_table.ATKD and self.under_attack == False:
+                if self.state < 2:
+                    self.state += 1
+                self.under_attack = True
+            elif other.event_test != key_table.ATKD:
+                self.under_attack = False
 
 class Gold_statue:
     image = None
     def __init__(self):
-        self.x, self.y = 0, 0
-        self.rand_x, self.rand_y = random.randint(400, 800), 500
+        self.x, self.y = 800,500
         self.frame = 0
         self.state = 0
         if Gold_statue.image == None:
             Gold_statue.image = load_image('Resource/destructible_object/Different_types of_destructible_objects.png')
+        self.under_attack = False
     def update(self):
         pass
     def draw(self):
@@ -60,6 +67,12 @@ class Gold_statue:
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         return sx-100, sy - 130, sx+100, sy + 130
     def handle_collision(self, other, group):
-        pass
+        if group == 'Player:Destructible_object':
+            if other.event_test == key_table.ATKD and self.under_attack == False:
+                self.under_attack = True
+                if self.state < 4:
+                    self.state += 1
+            elif other.event_test != key_table.ATKD:
+                self.under_attack = False
 
 

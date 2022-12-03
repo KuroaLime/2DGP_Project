@@ -7,8 +7,7 @@ import game_world
 class Apple:
     image=None
     def __init__(self):
-        self.x, self.y = 0, 0
-        self.rand_x, self.rand_y = random.randint(200, 900), random.randint(-200, 0)
+        self.x, self.y = random.randint(200, 900), random.randint(300, 500)
         self.frame = 0
         self.state=0 #0:평범한 상태 1:파괴된 상태
         if Apple.image == None:
@@ -58,8 +57,7 @@ class Apple:
 class Salad:
     image=None
     def __init__(self):
-        self.x, self.y = 0, 0
-        self.rand_x, self.rand_y = random.randint(200, 900), random.randint(-200, 0)
+        self.x, self.y = random.randint(200, 900), random.randint(300, 500)
         self.frame = 0
         self.state=0 #0:평범한 상태 1:파괴된 상태
         if Salad.image == None:
@@ -109,8 +107,7 @@ class Salad:
 class Chicken:
     image=None
     def __init__(self):
-        self.x, self.y = 0, 0
-        self.rand_x, self.rand_y = random.randint(200, 900), random.randint(-200, 0)
+        self.x, self.y = random.randint(200, 900), random.randint(300, 500)
         self.frame = 0
         self.state=0 #0:평범한 상태 1:파괴된 상태
         if Chicken.image == None:

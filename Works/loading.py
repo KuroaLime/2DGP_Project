@@ -21,7 +21,7 @@ class Loading:
     def update(self):
         pass
     def draw(self):
-        if server.stage.next_stage == True:
+        if server.stage.next_stage == True :
             self.image.draw(self.x, self.y,canvas_size.WID,canvas_size.HEI)
 
 class Punch_loading:

@@ -1,0 +1,19 @@
+from pico2d import *
+RD,RU,LD,LU,UD,UU,DD,DU,DASHD,DASHU,ATKD,ATKU,JUMPD,JUMPU,ATK_END, TIMER=range(16)
+
+key_event_table = {
+    (SDL_KEYDOWN, SDLK_d): RD,
+    (SDL_KEYDOWN, SDLK_a): LD,
+    (SDL_KEYDOWN, SDLK_w): UD,
+    (SDL_KEYDOWN, SDLK_s): DD,
+    (SDL_KEYDOWN, SDLK_TAB): DASHD,
+    (SDL_KEYDOWN, SDLK_k): JUMPD,
+    (SDL_KEYDOWN, SDLK_j): ATKD,
+
+    (SDL_KEYUP, SDLK_d): RU,
+    (SDL_KEYUP, SDLK_a): LU,
+    (SDL_KEYUP, SDLK_w): UU,
+    (SDL_KEYUP, SDLK_s): DU,
+    (SDL_KEYUP, SDLK_TAB): DASHU,
+    # (SDL_KEYUP, SDLK_j): ATKU
+}

@@ -62,7 +62,7 @@ def enter():
     server.Destructible_object = [Vending_machine(), Gold_statue()]
     server.item = [Apple(), Salad(), Chicken()]
 
-    server.portal = [Portal(),Portal2()]
+    server.portal = [Portal(), Portal2()]
 
     server.loading = [Loading(), Punch_loading()]
     #0 -> 배경
@@ -87,8 +87,7 @@ def enter():
     # game_world.add_collison_pairs(server.Player, server.Boss, 'Player:Boss')
     game_world.add_collison_pairs(server.Boss,server.stage, 'Boss:stage')
     game_world.add_collison_pairs(server.Player, server.item, 'Player:Item')
-    game_world.add_collison_pairs(server.Player, server.portal, 'Player:aPortal')
-
+    game_world.add_collison_pairs(server.Player, server.portal, 'Player:Portal')
 def exit():
     game_world.clear()
 
@@ -102,6 +101,9 @@ def update():
         if group == 'Player:stage' or group == 'Enermy:stage' or group == 'Boss:stage':
             if stage_collide(a, b):
                 # print('COLLISON : ', group)
+                b.handle_collision(a, group)
+        elif group == 'Player:Portal':
+            if portal_collide(a,b):
                 b.handle_collision(a, group)
         elif group == 'Player:Enermy' or group == 'Plyaer:Boss':
             if moving_obj_collide(a, b):
@@ -158,11 +160,19 @@ def stage_collide(a,b):
     if bottom_a < bottom_b: return True
 
     return False
+def portal_collide(a,b):
+    left_a, bottom_a, right_a, top_a = a.get_TT()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+    if left_a > right_b : return False
+    if right_a < left_b: return False
+    if top_a < bottom_b: return False
+    if bottom_a > top_b: return False
 
+    return True
 def add_enermy():
     if server.stage.next_stage == True:
-        print('add enermysssssssssssssssss')
         if server.stage.Timer >= 5.0:
+            print('add enermysssssssssssssssss')
             server.Enermy = [Cheerleader(), School_boy(), School_girl(), Cyborg(), Police_man()]
             game_world.add_objects(server.Enermy, 2)
             game_world.add_collison_pairs(server.Player, server.Enermy, 'Player:Enermy')
