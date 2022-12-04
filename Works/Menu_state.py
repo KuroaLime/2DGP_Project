@@ -6,20 +6,20 @@ from phone_window import Phone_boarder
 from phone_background import Phone_background
 from phone_window_option import *
 import server
-
-
+import title_state
+from menu_icon import select_Menu_icon,non_select_Menu_icon
 def enter():
     hide_cursor()
+    if server.Menu_icon == None:
+        server.Menu_window = Phone_boarder()
+        server.Menu_background = Phone_background()
+        server.Menu_option = [Phone_option_music(), Phone_option_soundEffect(), Phone_option_voice(),  Phone_option_save_exit()]
+        server.Menu_icon = [select_Menu_icon(), non_select_Menu_icon()]
 
-    server.Menu_window = Phone_boarder()
-    server.Menu_background = Phone_background()
-    server.Menu_option = [Phone_option_music(), Phone_option_soundEffect(), Phone_option_voice(),  Phone_option_save_exit()]
-
-
-    menu_world.add_object(server.Menu_background, 0)
-    menu_world.add_object(server.Menu_window, 1)
-    menu_world.add_objects(server.Menu_option, 2)
-
+        menu_world.add_object(server.Menu_background, 0)
+        menu_world.add_object(server.Menu_window, 1)
+        menu_world.add_objects(server.Menu_option, 2)
+        menu_world.add_objects(server.Menu_icon, 2)
 def exit():
     pass
 
@@ -60,18 +60,38 @@ def handle_events():
                         server.Menu_button_location -= 1
                 case pico2d.SDLK_a:
                     if server.Menu_button_location == 0:
-                        pass
+                        if server.music_volume >0:
+                            server.Menu_icon[0].x[server.Menu_button_location] -= 2
+                            server.Menu_icon[1].x[server.Menu_button_location] -= 2
+                            server.music_volume -= 2
                     elif server.Menu_button_location == 1:
-                        pass
+                        if server.effect_volume > 0:
+                            server.Menu_icon[0].x[server.Menu_button_location] -= 2
+                            server.Menu_icon[1].x[server.Menu_button_location] -= 2
+                            server.effect_volume -= 2
                     elif server.Menu_button_location == 2:
-                        pass
+                        if server.volume > 0:
+                            server.Menu_icon[0].x[server.Menu_button_location] -= 2
+                            server.Menu_icon[1].x[server.Menu_button_location] -= 2
+                            server.volume -= 2
                 case pico2d.SDLK_d:
                     if server.Menu_button_location == 0:
-                        pass
+                        if server.music_volume < 128:
+                            server.Menu_icon[0].x[server.Menu_button_location] += 2
+                            server.Menu_icon[1].x[server.Menu_button_location] += 2
+                            server.music_volume += 2
                     elif server.Menu_button_location == 1:
-                        pass
+                        if server.effect_volume < 128:
+                            server.Menu_icon[0].x[server.Menu_button_location] += 2
+                            server.Menu_icon[1].x[server.Menu_button_location] += 2
+                            server.effect_volume += 2
                     elif server.Menu_button_location == 2:
-                        pass
+                        if server.volume < 128:
+                            server.Menu_icon[0].x[server.Menu_button_location] += 2
+                            server.Menu_icon[1].x[server.Menu_button_location] += 2
+                            server.volume += 2
                 case pico2d.SDLK_j:
                     if server.Menu_button_location == 3:
-                        pass
+                        # game_world.save()
+                        game_world.clear()
+                        game_framework.change_state(title_state)

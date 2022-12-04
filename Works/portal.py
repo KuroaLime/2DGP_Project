@@ -2,21 +2,27 @@ from pico2d import *
 import game_framework
 import server
 import random
-max_dead_enermy = [4,4,4,4,4,4,4,1]
-portal_location_x = [[1920,960,2500,2500,1920],[-50,1920,200,200,200]]
-portal_location_y = [[700,700,400,400,700],[0,700,400,400,400,400]]
+max_dead_enermy = [0,0,0,0,0,0,0,1]
+portal_location_x = [[1920,960,2500,1250,2500,3200,1920,2000],[-50,1920,200,200,1350,100,200,400]]
+portal_location_y = [[700,700,400,700,400,400,700,800],      [0,700,400,400,700,400,100,400]]
 class Portal:
     def __init__(self):
         self.x, self.y = portal_location_x[0][server.stage_number], portal_location_y[0][server.stage_number]
         self.stage_location = server.stage_number
         self.work_portal = False
+    def __getstate__(self):
+        state = {'stage_location':self.stage_location}
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
     def update(self):
         if self.x != portal_location_x[0][server.stage_number] or self.y != portal_location_y[0][server.stage_number]:
             self.x = portal_location_x[0][server.stage_number]
             self.y = portal_location_y[0][server.stage_number]
     def draw(self):
-        draw_rectangle(*self.get_bb())
-
+        # draw_rectangle(*self.get_bb())
+        pass
     def get_bb(self):
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         return sx - 190, sy - 170, sx + 190, sy + 240
@@ -38,17 +44,24 @@ class Portal:
 
 
 class Portal2:
+
     def __init__(self):
         self.x, self.y = portal_location_x[1][server.stage_number], portal_location_y[1][server.stage_number]
         self.stage_location = server.stage_number
         self.work_portal = False
+    def __getstate__(self):
+        state = {'stage_location':self.stage_location}
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
     def update(self):
         if self.x != portal_location_x[1][server.stage_number] or self.y != portal_location_y[1][server.stage_number]:
             self.x = portal_location_x[1][server.stage_number]
             self.y = portal_location_y[1][server.stage_number]
     def draw(self):
-        draw_rectangle(*self.get_bb())
-
+        # draw_rectangle(*self.get_bb())
+        pass
     def get_bb(self):
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         return sx - 190, sy - 170, sx + 190, sy + 240

@@ -7,16 +7,21 @@ import game_world
 class Apple:
     image=None
     def __init__(self):
-        self.x, self.y = random.randint(200, 900), random.randint(300, 500)
+        self.x, self.y = random.randint(500, 2000), random.randint(300, 500)
         self.frame = 0
         self.state=0 #0:평범한 상태 1:파괴된 상태
         if Apple.image == None:
             Apple.image = load_image('Resource/Food/apple.png')
-
+    def __getstate__(self):
+        state = {'state':self.state}
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
     def update(self):
         pass
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         self.image.clip_composite_draw(59, 54, 14, 18, 0, '', sx, sy, 30, 30)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
@@ -31,25 +36,25 @@ class Apple:
 
         if left_a < left_b:
             other.item[0] += 1
-            other.hp += 20
+            other.hp += 400
             if other.max_hp < other.hp:
                 other.hp = other.max_hp
             game_world.remove_object(self)
         elif right_a > right_b:
             other.item[0] += 1
-            other.hp += 20
+            other.hp += 400
             if other.max_hp < other.hp:
                 other.hp = other.max_hp
             game_world.remove_object(self)
         elif top_a - 165 > top_b - 165:
             other.item[0] += 1
-            other.hp += 20
+            other.hp += 400
             if other.max_hp < other.hp:
                 other.hp = other.max_hp
             game_world.remove_object(self)
         elif bottom_a < bottom_b:
             other.item[0] += 1
-            other.hp += 20
+            other.hp += 400
             if other.max_hp < other.hp:
                 other.hp = other.max_hp
             game_world.remove_object(self)
@@ -57,16 +62,21 @@ class Apple:
 class Salad:
     image=None
     def __init__(self):
-        self.x, self.y = random.randint(200, 900), random.randint(300, 500)
+        self.x, self.y = random.randint(500, 2000), random.randint(300, 500)
         self.frame = 0
         self.state=0 #0:평범한 상태 1:파괴된 상태
         if Salad.image == None:
             Salad.image = load_image('Resource/Food/salad.png')
-
+    def __getstate__(self):
+        state = {'state':self.state}
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
     def update(self):
         pass
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         self.image.clip_composite_draw(55, 54, 20, 14, 0, '', sx, sy, 30, 30)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
@@ -81,25 +91,25 @@ class Salad:
 
         if left_a < left_b:
             other.item[0] += 1
-            other.hp += 50
+            other.hp += 600
             if other.max_hp < other.hp:
                 other.hp = other.max_hp
             game_world.remove_object(self)
         elif right_a > right_b:
             other.item[0] += 1
-            other.hp += 50
+            other.hp += 600
             if other.max_hp < other.hp:
                 other.hp = other.max_hp
             game_world.remove_object(self)
         elif top_a - 165 > top_b - 165:
             other.item[0] += 1
-            other.hp += 50
+            other.hp += 600
             if other.max_hp < other.hp:
                 other.hp = other.max_hp
             game_world.remove_object(self)
         elif bottom_a < bottom_b:
             other.item[0] += 1
-            other.hp += 50
+            other.hp += 600
             if other.max_hp < other.hp:
                 other.hp = other.max_hp
             game_world.remove_object(self)
@@ -107,16 +117,21 @@ class Salad:
 class Chicken:
     image=None
     def __init__(self):
-        self.x, self.y = random.randint(200, 900), random.randint(300, 500)
+        self.x, self.y = random.randint(500, 2000), random.randint(300, 500)
         self.frame = 0
         self.state=0 #0:평범한 상태 1:파괴된 상태
         if Chicken.image == None:
             Chicken.image = load_image('Resource/Food/chicken.png')
-
+    def __getstate__(self):
+        state = {'state':self.state}
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
     def update(self):
         pass
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         self.image.clip_composite_draw(44, 51, 42, 21, 0, '', sx, sy, 30, 30)
     def get_bb(self):  # 적, 자판기등의 오브젝트와의 충돌범위
@@ -131,25 +146,25 @@ class Chicken:
 
         if left_a < left_b:
             other.item[0] += 1
-            other.hp += 100
+            other.hp += 600
             if other.max_hp < other.hp:
                 other.hp = other.max_hp
             game_world.remove_object(self)
         elif right_a > right_b:
             other.item[0] += 1
-            other.hp += 100
+            other.hp += 600
             if other.max_hp < other.hp:
                 other.hp = other.max_hp
             game_world.remove_object(self)
         elif top_a - 165 > top_b - 165:
             other.item[0] += 1
-            other.hp += 100
+            other.hp += 600
             if other.max_hp < other.hp:
                 other.hp = other.max_hp
             game_world.remove_object(self)
         elif bottom_a < bottom_b:
             other.item[0] += 1
-            other.hp += 100
+            other.hp += 600
             if other.max_hp < other.hp:
                 other.hp = other.max_hp
             game_world.remove_object(self)

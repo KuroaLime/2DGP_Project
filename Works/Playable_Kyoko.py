@@ -6,6 +6,8 @@ import math
 import time
 import server
 import restricted_area
+import title_state
+
 PIXEL_PER_METER = (10.0 / 0.3)
 RUN_SPEED_KMPH = 20.0
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
@@ -24,6 +26,8 @@ FRAMES_PER_ACTION_RUN = 12
 FRAMES_PER_ACTION_NORMAL_ATTACK00 = 6
 FRAMES_PER_ACTION_NORMAL_ATTACK01 = 7
 FRAMES_PER_ACTION_NORMAL_ATTACK02 = 12
+FRAMES_PER_ACTION_DEAD =21
+
 JUMP_VELOCITY = 10
 PLAYER_WEIGHT = 2
 GRAVITY =0.05
@@ -33,11 +37,12 @@ JUMP_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 JUMP_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 JUMP_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-RD,RU,LD,LU,UD,UU,DD,DU,DASHD,DASHU,ATKD,ATKU,JUMPD,JUMPU,ATK_END, TIMER=range(16)
-event_name=['RD','RU','LD','LU','UD','UU','DD','DU','DASHD','DASHU','ATKD','ATKU','JUMPD','JUMPU','ATK_END', 'TIMER']
+RD,RU,LD,LU,UD,UU,DD,DU,DASHD,DASHU,ATKD,ATKU,JUMPD,JUMPU,ATK_END, TIMER, DEAD=range(17)
+event_name=['RD','RU','LD','LU','UD','UU','DD','DU','DASHD','DASHU','ATKD','ATKU','JUMPD','JUMPU','ATK_END', 'TIMER', 'DEAD']
 
-next_stage_location = [(500, 500),(1920, 700),(200,400),(200,400)]
-behind_stage_location = [(1920, 700),(960,700),(2500, 400), (2500, 400)]
+next_stage_location = [(500, 500),(1920, 600),(400,400),(200,400),(1250,700),(200,400),(200,400)]
+behind_stage_location = [(1920, 700),(480, 600),(2500, 400), (2500, 400), (2500, 400), (2500, 400), (2500, 400)]
+
 key_event_table = {
     (SDL_KEYDOWN, SDLK_d): RD,
     (SDL_KEYDOWN, SDLK_a): LD,
@@ -72,6 +77,11 @@ class IDLE:
         print('EXIT IDLE')
     @staticmethod
     def do(self):
+        if self.hp <= 0:
+            self.Go_Dead()
+        # for i in range(len(server.Enermy)):
+        #     if server.Enermy[i].atk_state == True:
+        #         self.Go_Stun()
         self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
         self.timer -= 1
         if self.timer == 0:
@@ -126,6 +136,11 @@ class RUN_lr:
         self.portalState = False
     @staticmethod
     def do(self):
+        if self.hp <= 0:
+            self.Go_Dead()
+        # for i in range(len(server.Enermy)):
+        #     if server.Enermy[i].atk_state == True:
+        #         self.Go_Stun()
         if self.attacking == False:
             self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
             if self.DashState:
@@ -182,6 +197,11 @@ class RUN_ud:
         self.portalState = False
     @staticmethod
     def do(self):
+        if self.hp <= 0:
+            self.Go_Dead()
+        # for i in range(len(server.Enermy)):
+        #     if server.Enermy[i].atk_state == True:
+        #         self.Go_Stun()
         if self.attacking == False:
             self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
             if self.DashState:
@@ -247,6 +267,11 @@ class RUN_diag: #대각선 이동
         self.portalState = False
     @staticmethod
     def do(self):
+        if self.hp <= 0:
+            self.Go_Dead()
+        # for i in range(len(server.Enermy)):
+        #     if server.Enermy[i].atk_state == True:
+        #         self.Go_Stun()
         if self.attacking == False:
             self.frame = (self.frame + FRAMES_PER_ACTION_RUN * ACTION_PER_TIME * game_framework.frame_time) % 12
             if self.DashState:
@@ -295,6 +320,8 @@ class SLEEP:
         self.portalState = False
     @staticmethod
     def do(self):
+        if self.hp <= 0:
+            self.Go_Dead()
         self.frame = (self.frame + FRAMES_PER_ACTION_IDLE * ACTION_PER_TIME * game_framework.frame_time) % 12
 
     @staticmethod
@@ -322,6 +349,11 @@ class Normal_attack:
         self.portalTimer = 0
     @staticmethod
     def do(self):
+        if self.hp <= 0:
+            self.Go_Dead()
+        # for i in range(len(server.Enermy)):
+        #     if server.Enermy[i].atk_state == True:
+        #         self.Go_Stun()
         if self.attacking == True:
             # print('attack_turn : ', self.attack_turn)
             if self.attack_turn == 0:
@@ -386,21 +418,57 @@ class Normal_attack:
                 self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, '', sx, sy, 140, 200)
             else:
                 self.image.clip_composite_draw(int(self.frame) * 39, 415, 39, 69, 0, 'h', sx, sy, 140, 200)
+
+class DEAD:
+    @staticmethod
+    def enter(self, event):
+        self.dead_timer = 5.0
+        self.dead_state = True
+        # self.game_over_sound.repeat_play()
+        pass
+    @staticmethod
+    def exit(self, event):
+        pass
+    @staticmethod
+    def do(self):
+        if self.frame < FRAMES_PER_ACTION_DEAD-1:
+            self.frame = (self.frame + FRAMES_PER_ACTION_DEAD* (ACTION_PER_TIME//2.0) * game_framework.frame_time) % FRAMES_PER_ACTION_DEAD
+        self.dead_timer -= game_framework.frame_time
+        if self.dead_timer <= 0:
+            self.dead_timer = 5.0
+            game_world.clear()
+            server.new_chalange = True
+            game_framework.change_state(title_state)
+    @staticmethod
+    def draw(self):
+        sy = self.y - server.stage.window_bottom
+        sx = self.x - server.stage.window_left
+        if self.frame < FRAMES_PER_ACTION_DEAD-1:
+            if self.face_dir == 1:
+                self.image.clip_composite_draw(320 + int(self.frame) * 80, 278, 50, 80, 0, '', sx, sy, 140, 200)
+            else:
+                self.image.clip_composite_draw(320 + int(self.frame) * 80, 278, 50, 80, 0, 'h', sx, sy, 140, 200)
+        else:
+            if self.face_dir == 1:
+                self.image.clip_composite_draw(1990, 278, 100, 80, 0, '', sx, sy, 140, 200)
+            else:
+                self.image.clip_composite_draw(1990, 278, 100, 80, 0, 'h', sx, sy, 140, 200)
 next_state = {
-    IDLE: {RU: IDLE, LU: IDLE, RD: RUN_lr, LD: RUN_lr, UU: IDLE, DU: IDLE, UD: RUN_ud, DD: RUN_ud,JUMPD: IDLE, TIMER: SLEEP,ATKD:Normal_attack,ATK_END:IDLE},
-    RUN_lr: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE, UU: RUN_diag, DU: RUN_diag, UD: RUN_diag, DD: RUN_diag,JUMPD: RUN_lr,ATKD:Normal_attack,ATK_END:IDLE},
-    RUN_ud: {RU: RUN_diag, LU: RUN_diag, RD: RUN_diag, LD: RUN_diag, UU: IDLE, DU: IDLE, UD: IDLE, DD: IDLE,JUMPD: RUN_ud,ATKD:Normal_attack,ATK_END:IDLE},
-    RUN_diag: {RU: RUN_ud, LU: RUN_ud, RD: RUN_ud, LD: RUN_ud, UU: RUN_lr, DU: RUN_lr, UD: RUN_lr, DD: RUN_lr,JUMPD: RUN_diag,ATKD:Normal_attack,ATK_END:IDLE},
-    Normal_attack: {RU: Normal_attack, LU: Normal_attack, RD: Normal_attack, LD: Normal_attack, UU: Normal_attack, DU: Normal_attack, UD: Normal_attack, DD: Normal_attack,JUMPD: Normal_attack,ATKD:Normal_attack,ATK_END:IDLE},
-    SLEEP: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud, JUMPD: IDLE, TIMER: SLEEP,ATKD:Normal_attack,ATK_END:IDLE}
+    IDLE: {RU: IDLE, LU: IDLE, RD: RUN_lr, LD: RUN_lr, UU: IDLE, DU: IDLE, UD: RUN_ud, DD: RUN_ud,JUMPD: IDLE, TIMER: SLEEP,ATKD:Normal_attack,ATK_END:IDLE, DEAD:DEAD },
+    RUN_lr: {RU: IDLE, LU: IDLE, RD: IDLE, LD: IDLE, UU: RUN_diag, DU: RUN_diag, UD: RUN_diag, DD: RUN_diag,JUMPD: RUN_lr,ATKD:Normal_attack,ATK_END:IDLE, DEAD:DEAD},
+    RUN_ud: {RU: RUN_diag, LU: RUN_diag, RD: RUN_diag, LD: RUN_diag, UU: IDLE, DU: IDLE, UD: IDLE, DD: IDLE,JUMPD: RUN_ud,ATKD:Normal_attack,ATK_END:IDLE, DEAD:DEAD},
+    RUN_diag: {RU: RUN_ud, LU: RUN_ud, RD: RUN_ud, LD: RUN_ud, UU: RUN_lr, DU: RUN_lr, UD: RUN_lr, DD: RUN_lr,JUMPD: RUN_diag,ATKD:Normal_attack,ATK_END:IDLE, DEAD:DEAD},
+    Normal_attack: {RU: Normal_attack, LU: Normal_attack, RD: Normal_attack, LD: Normal_attack, UU: Normal_attack, DU: Normal_attack, UD: Normal_attack, DD: Normal_attack,JUMPD: Normal_attack,ATKD:Normal_attack,ATK_END:IDLE, DEAD:DEAD},
+    SLEEP: {RU: RUN_lr, LU: RUN_lr, RD: RUN_lr, LD: RUN_lr, UU: RUN_ud, DU: RUN_ud, UD: RUN_ud, DD: RUN_ud, JUMPD: IDLE, TIMER: SLEEP,ATKD:Normal_attack,ATK_END:IDLE, DEAD:DEAD},
+    DEAD: {RU: DEAD, LU: DEAD, RD: DEAD, LD: DEAD, UU: DEAD, DU: DEAD, UD: DEAD, DD: DEAD, JUMPD: DEAD, TIMER: DEAD,ATKD:DEAD,ATK_END:DEAD, DEAD:DEAD}
 }
 class Kyoko:
     image =None
+
     def __init__(self):
-        self.max_hp = 500
-        self.hp = 500
-        self.exp = 0
-        self.level = 1
+        self.dead_state = False
+        self.max_hp = 2500
+        self.hp = 2500
         self.power = 10
         self.luck = 5
         self.move_stage = False
@@ -445,11 +513,20 @@ class Kyoko:
         self.Enermy_attacking = False
 
         self.stage_location = server.stage_number
+        # self.game_over_sound = load_music('sound/game_over/game_over_sound.wav')
+        # self.game_over_sound.set_volume(32)
+    def __getstate__(self):
+        state = {'x':self.x, 'y':self.y, 'dir':self.face_dir, 'hp':self.hp, 'stage_location':self.stage_location }
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
     def update(self):
         self.cur_state.do(self)
 
         if self.event_que:
             event = self.event_que.pop()
+
             self.event_test = event
             if event == JUMPD and self.JumpState == False:
                 self.Jump_state()
@@ -465,8 +542,8 @@ class Kyoko:
             self.JUMP()
     def draw(self):
         self.cur_state.draw(self)
-        draw_rectangle(*self.get_bb())
-        draw_rectangle(*self.get_TT())
+        # draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_TT())
         debug_print('PPPP')
         debug_print(f'Face Dir: {self.face_dir}, Dir: {self.dir_lr}')
 
@@ -529,3 +606,5 @@ class Kyoko:
             self.DashState = True
     def Complete_ATK(self):
         self.add_event(ATK_END)
+    def Go_Dead(self):
+        self.add_event(DEAD)

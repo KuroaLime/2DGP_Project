@@ -12,7 +12,12 @@ class Character_face:
         self.load_images()
         self.x = 310
         self.y = 1000
-
+    def __getstate__(self):
+        state = {}
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
     def update(self):
         pass
 
@@ -31,10 +36,16 @@ class Hp_bar:
         self.load_images()
         self.x = 400
         self.y = 1020
+    def __getstate__(self):
+        state = {}
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
     def update(self):
         pass
     def draw(self):
 
 
-        for i in range(25):
+        for i in range(server.Player.hp//100):
             Hp_bar.image.composite_draw(0, '', self.x + 15 * i, self.y, 10, 20)

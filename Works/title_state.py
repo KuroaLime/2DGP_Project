@@ -2,9 +2,32 @@ from pico2d import *
 from canvas_size import *
 
 import game_framework
+import game_world
 import play_state
 import logo_state
+from stage import Stage
 
+import Menu_state
+#적 임포트
+from cheerleader import Cheerleader
+from school_boy import School_boy
+from school_girl import School_girl
+from cyborg import Cyborg
+from police_man import Police_man
+
+from Playable_Kyoko import Kyoko
+
+from misuzu import Misuzu
+from hibari import Hibari
+
+from destructible_object import Vending_machine, Gold_statue
+from item import Apple, Salad, Chicken
+from portal import Portal, Portal2
+
+from loading import Loading, Punch_loading
+from hp_bar import Hp_bar, Character_face
+import server
+from Playable_Kyoko import Kyoko
 image_background = None
 image_component=None
 
@@ -43,7 +66,30 @@ def exit():
     del image_component
     del component_x, component_y
     del my_button_y, my_button_x
-
+def load_saved_world():
+    count = 0
+    game_world.load()
+    for o in game_world.all_objects():
+        print(count)
+        if count >=10:
+            break
+        if isinstance(o, Kyoko):
+            server.Player = o
+            count += 1
+            continue
+        elif isinstance(o, Stage):
+            server.stage = o
+            count += 1
+            continue
+        # elif isinstance(o, Portal):
+        #     server.portal[0] = o
+        #     continue
+        # elif isinstance(o,Portal2):
+        #     server.portal[1] = o
+        #     continue
+        # elif isinstance(o,Misuzu):
+        #     server.Boss = o
+        #     continue
 def handle_events():
     global my_button_dir
 
@@ -60,6 +106,7 @@ def handle_events():
                 my_button_dir =0
             elif event.key == SDLK_j:
                 if my_button_dir == 0:
+                    # load_saved_world()
                     game_framework.change_state(play_state)
                 else:
                     game_framework.quit()

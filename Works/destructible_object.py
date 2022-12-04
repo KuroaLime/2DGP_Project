@@ -6,6 +6,7 @@ import key_table
 import game_world
 class Vending_machine:
     image=None
+    break_sound = None
     def __init__(self):
         self.x, self.y= 800,500
         self.frame = 0
@@ -13,7 +14,15 @@ class Vending_machine:
         if Vending_machine.image == None:
             Vending_machine.image = load_image('Resource/destructible_object/vending_machine_Normal.png')
         self.under_attack = False
-
+        if Vending_machine.break_sound == None:
+            self.break_sound = load_wav('sound/destructible_object/vending_machine_break.wav')
+            self.break_sound.set_volume(32)
+    def __getstate__(self):
+        state = {'state':self.state}
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
     def update(self):
         # print('state : ', self.state)
         if self.state == 1:
@@ -22,7 +31,7 @@ class Vending_machine:
         if server.stage.next_stage == True:
             game_world.remove_object(self)
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         if self.state == 0:
             self.image.clip_composite_draw(0, 0, 81, 81, 0, '', sx, sy, 300, 300)
@@ -40,12 +49,14 @@ class Vending_machine:
             if other.event_test == key_table.ATKD and self.under_attack == False:
                 if self.state < 2:
                     self.state += 1
+                    self.break_sound.play(1)
                 self.under_attack = True
             elif other.event_test != key_table.ATKD:
                 self.under_attack = False
 
 class Gold_statue:
     image = None
+    break_sound=None
     def __init__(self):
         self.x, self.y = 800,500
         self.frame = 0
@@ -53,11 +64,21 @@ class Gold_statue:
         if Gold_statue.image == None:
             Gold_statue.image = load_image('Resource/destructible_object/Different_types of_destructible_objects.png')
         self.under_attack = False
+        self.break_state = False
+        if Gold_statue.break_sound == None:
+            self.break_sound = load_wav('sound/destructible_object/vending_machine_break.wav')
+            self.break_sound.set_volume(32)
+    def __getstate__(self):
+        state = {'state':self.state}
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
     def update(self):
         if server.stage.next_stage == True:
             game_world.remove_object(self)
     def draw(self):
-        draw_rectangle(*self.get_bb())
+        # draw_rectangle(*self.get_bb())
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
         if self.state == 0:
             self.image.clip_composite_draw(1470, 100, 90, 170, 0, '', sx, sy, 200, 250)
@@ -66,6 +87,7 @@ class Gold_statue:
         elif self.state == 2:
             self.image.clip_composite_draw(1185, 490, 85, 145, 0, '', sx, sy, 200, 250)
         else:
+            self.break_state = True
             self.image.clip_composite_draw(1265, 655, 80, 80, 0, '', sx, sy, 200, 250)
     def get_bb(self):
         sx, sy = self.x - server.stage.window_left, self.y - server.stage.window_bottom
@@ -76,6 +98,7 @@ class Gold_statue:
                 self.under_attack = True
                 if self.state < 4:
                     self.state += 1
+                    self.break_sound.play(1)
             elif other.event_test != key_table.ATKD:
                 self.under_attack = False
 

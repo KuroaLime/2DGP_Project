@@ -17,8 +17,9 @@ class Stage:
         if Stage.images == None:
             Stage.images = {}
             for name in stage_name:
-                Stage.images[name] = [load_image("./Resource/stage/"+ name + "(%d)" % i + ".png") for i in range(1, 8)]
-    def __init__(self,Stage_location):
+                Stage.images[name] = [load_image("./Resource/stage/"+ name + " (%d)" % i + ".png") for i in range(1, 8)]
+    def __init__(self):
+        self.stage_numbers= 0
         self.load_images()
         # self.stage_number = 0
         self.canvas_width = get_canvas_width()
@@ -29,7 +30,29 @@ class Stage:
         self.dead_enermy = 0
         self.Timer = 0
         self.loading = False
+        self.Volume = 32
+        self.bgm = load_music('sound/deafault_music.wav')
+        self.bgm.set_volume(self.Volume)
+        self.bgm.repeat_play()
+        self.game_over = load_wav('sound/game_over/game_over_sound.wav')
+        self.game_over.set_volume(self.Volume)
+        self.stage_number = 0
+
+    def __getstate__(self):
+        state = {'dead_enermy':self.dead_enermy, 'stage_number':self.stage_number}
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
+
     def update(self):
+        if self.Volume != server.music_volume:
+            self.Volume = server.music_volume
+            self.bgm.set_volume(self.Volume)
+        if server.Player.dead_state == True:
+            self.bgm.stop()
+            self.game_over.play(1)
+
         self.window_left = clamp(0,
                                   int(server.Player.x)- self.canvas_width//2,
                                   self.WID - self.canvas_width - 1)

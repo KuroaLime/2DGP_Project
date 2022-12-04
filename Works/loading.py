@@ -17,7 +17,12 @@ class Loading:
             Loading.image = load_image('Resource/loading/black_screen.png')
         self.x = get_canvas_width() // 2
         self.y = get_canvas_height() // 2
-
+    def __getstate__(self):
+        state = {}
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
     def update(self):
         pass
     def draw(self):
@@ -36,6 +41,12 @@ class Punch_loading:
         self.x = get_canvas_width() -80
         self.y = 50
         self.frame = 0
+    def __getstate__(self):
+        state = {}
+        return state
+    def __setstate__(self, state):
+        self.__init__()
+        self.__dict__.update(state)
     def update(self):
         if server.stage.next_stage == True:
             self.frame = (self.frame + FRAMES_PER_ACTION_PUNCH * ACTION_PER_TIME * game_framework.frame_time) % FRAMES_PER_ACTION_PUNCH
