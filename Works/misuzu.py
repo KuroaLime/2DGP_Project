@@ -56,7 +56,7 @@ class Misuzu:
             Misuzu.Get_hit_sound.set_volume(self.effect_Volume)
         self.prepare_patrol_points()
         self.patrol_order = 1
-        self.hp = 10
+        self.hp = 200
         self.x, self.y= self.patrol_points[0]
         self.frame = 0
         # self.last_frame=[12,    #idle
