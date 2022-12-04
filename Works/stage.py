@@ -17,7 +17,7 @@ class Stage:
         if Stage.images == None:
             Stage.images = {}
             for name in stage_name:
-                Stage.images[name] = [load_image("./Resource/stage/"+ name + " (%d)" % i + ".png") for i in range(1, 8)]
+                Stage.images[name] = [load_image("./Resource/stage/"+ name + " (%d)" % i + ".png") for i in range(1, 9)]
     def __init__(self):
         self.stage_numbers= 0
         self.load_images()
@@ -69,10 +69,6 @@ class Stage:
                 self.WID = self.images['School'][server.stage_number].w
                 self.HEI = self.images['School'][server.stage_number].h
                 self.Timer = 0
-                if server.Player.stage_location < server.stage_number:
-                    server.Player.x, server.Player.y = Playable_Kyoko.next_stage_location[server.stage_number]
-                else:
-                    server.Player.x, server.Player.y = Playable_Kyoko.behind_stage_location[server.stage_number]
                 for i in range(2):
                     server.portal[i].work_portal = False
             elif self.Timer <=5:

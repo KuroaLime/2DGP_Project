@@ -40,8 +40,8 @@ JUMP_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 RD,RU,LD,LU,UD,UU,DD,DU,DASHD,DASHU,ATKD,ATKU,JUMPD,JUMPU,ATK_END, TIMER, DEAD=range(17)
 event_name=['RD','RU','LD','LU','UD','UU','DD','DU','DASHD','DASHU','ATKD','ATKU','JUMPD','JUMPU','ATK_END', 'TIMER', 'DEAD']
 
-next_stage_location = [(500, 500),(1920, 600),(400,400),(200,400),(1250,700),(200,400),(200,400)]
-behind_stage_location = [(1920, 700),(480, 600),(2500, 400), (2500, 400), (2500, 400), (2500, 400), (2500, 400)]
+next_stage_location = [[500, 500],[1920, 600],[400,400],[400,400],[1250,500],[200,400],[200,400], [2500, 400]]
+behind_stage_location = [[1920, 600],[800, 600],[2300, 400], [2300, 400], [2500, 400], [2500, 400], [2500, 400], [2500, 400]]
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_d): RD,
@@ -422,7 +422,6 @@ class Normal_attack:
 class DEAD:
     @staticmethod
     def enter(self, event):
-        self.dead_timer = 5.0
         self.dead_state = True
         # self.game_over_sound.repeat_play()
         pass
@@ -511,8 +510,9 @@ class Kyoko:
         self.next_stage = False
 
         self.Enermy_attacking = False
-
+        self.dead_timer = 5.0
         self.stage_location = server.stage_number
+        self.last_timer = 5.0
         # self.game_over_sound = load_music('sound/game_over/game_over_sound.wav')
         # self.game_over_sound.set_volume(32)
     def __getstate__(self):
@@ -522,10 +522,23 @@ class Kyoko:
         self.__init__()
         self.__dict__.update(state)
     def update(self):
+
+        if self.stage_location < server.stage_number:
+            server.Player.x, server.Player.y = next_stage_location[server.stage_number]
+            self.stage_location = server.stage_number
+            print(next_stage_location[server.stage_number])
+        elif self.stage_location > server.stage_number:
+            server.Player.x, server.Player.y = behind_stage_location[server.stage_number]
+            self.stage_location = server.stage_number
+            print(behind_stage_location[server.stage_number])
         self.cur_state.do(self)
 
         if self.event_que:
             event = self.event_que.pop()
+
+            if self.stage_location == 7 and event == ATKD:
+                game_world.clear()
+                game_framework.change_state(title_state)
 
             self.event_test = event
             if event == JUMPD and self.JumpState == False:

@@ -3,8 +3,8 @@ import game_framework
 import server
 import random
 max_dead_enermy = [0,0,0,0,0,0,0,1]
-portal_location_x = [[1920,960,2500,1250,2500,3200,1920,2000],[-50,1920,200,200,1350,100,200,400]]
-portal_location_y = [[700,700,400,700,400,400,700,800],      [0,700,400,400,700,400,100,400]]
+portal_location_x = [[1920,960,2500,1250,2500,3200,1242,2000],[-50,1920,200,240,1350,100,215,2000]]
+portal_location_y = [[700,700,400,700,400,400,820,2000],      [0,700,400,400,700,400,540,2000]]
 class Portal:
     def __init__(self):
         self.x, self.y = portal_location_x[0][server.stage_number], portal_location_y[0][server.stage_number]
@@ -34,7 +34,8 @@ class Portal:
         # print('collision Portal!!!!!!')]
         if server.stage.next_stage == True and server.stage_number == self.stage_location and server.portal[1].work_portal == False and self.work_portal == False:
             self.work_portal = True
-            server.stage_number += 1
+            if server.stage_number != 6:
+                server.stage_number += 1
             print('Portal1 : stage number : ', server.stage_number)
             self.stage_location, server.portal[1].stage_location = server.stage_number, server.stage_number
 

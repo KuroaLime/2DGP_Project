@@ -56,7 +56,7 @@ class Misuzu:
             Misuzu.Get_hit_sound.set_volume(self.effect_Volume)
         self.prepare_patrol_points()
         self.patrol_order = 1
-        self.hp = 20
+        self.hp = 10
         self.x, self.y= self.patrol_points[0]
         self.frame = 0
         # self.last_frame=[12,    #idle
@@ -136,7 +136,7 @@ class Misuzu:
             self.atk_timer -= game_framework.frame_time
             if self.atk_timer <= 0:
                 self.atk_timer = 1.0
-                server.Player.hp -= 200
+                server.Player.hp -= 400
                 self.atk_state = False
                 Misuzu.Get_hit_sound.play()
                 return BehaviorTree.SUCCESS
@@ -186,6 +186,7 @@ class Misuzu:
                 self.dead_timer = 1.0
                 self.dead = True
                 self.frame = 0
+                server.stage_number += 1
                 return BehaviorTree.SUCCESS
             else:
                 return BehaviorTree.RUNNING

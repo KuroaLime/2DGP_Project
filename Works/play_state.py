@@ -194,7 +194,7 @@ def add_enermy():
                 game_world.add_collison_pairs(server.Player, server.Enermy, 'Player:Enermy')
                 game_world.add_collison_pairs(server.Enermy, server.stage, 'Enermy:stage')
 
-            if server.stage_number == 1 or server.stage_number == 4 or server.stage_number == 6:
+            if server.stage_number == 1 or server.stage_number == 3 or server.stage_number == 5:
                 server.Destructible_object = Vending_machine()
                 game_world.add_object(server.Destructible_object, 1)
                 game_world.add_collison_pairs(server.Player, server.Destructible_object, 'Player:Vending_machine')
@@ -202,7 +202,8 @@ def add_enermy():
                 server.item = [Apple()]
                 game_world.add_objects(server.item, 1)
                 game_world.add_collison_pairs(server.Player, server.item, 'Player:Item')
-            if server.stage_number == 8 or server.stage_number == 9 or server.stage_number == 10:
+            if server.stage_number == 2 or server.stage_number == 4:
+
                 server.Destructible_object =Gold_statue()
                 game_world.add_object(server.Destructible_object, 1)
                 game_world.add_collison_pairs(server.Player, server.Destructible_object, 'Player:Gold_statue')

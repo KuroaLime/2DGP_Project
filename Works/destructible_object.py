@@ -8,11 +8,10 @@ class Vending_machine:
     image=None
     break_sound = None
     def __init__(self):
-        self.x, self.y= 800,500
+        self.x, self.y= 700,500
         self.frame = 0
         self.state=0 #0:평범한 상태 1:파괴된 상태
-        if Vending_machine.image == None:
-            Vending_machine.image = load_image('Resource/destructible_object/vending_machine_Normal.png')
+        Vending_machine.image = load_image('Resource/destructible_object/vending_machine_Normal.png')
         self.under_attack = False
         if Vending_machine.break_sound == None:
             self.break_sound = load_wav('sound/destructible_object/vending_machine_break.wav')
@@ -58,11 +57,10 @@ class Gold_statue:
     image = None
     break_sound=None
     def __init__(self):
-        self.x, self.y = 800,500
+        self.x, self.y = 900,400
         self.frame = 0
         self.state = 0
-        if Gold_statue.image == None:
-            Gold_statue.image = load_image('Resource/destructible_object/Different_types of_destructible_objects.png')
+        Gold_statue.image = load_image('Resource/destructible_object/Different_types of_destructible_objects.png')
         self.under_attack = False
         self.break_state = False
         if Gold_statue.break_sound == None:
